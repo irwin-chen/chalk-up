@@ -5,7 +5,7 @@ export default function UserCardList(props) {
   const { userList } = props;
   const userCardList = userList.map(entry => {
     return (
-        <UserCard userProfile={entry} key={entry.userId}/>
+        <UserCard userProfile={entry} key={entry.userId} userId={entry.userId}/>
     );
   });
   return (

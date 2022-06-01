@@ -5,8 +5,17 @@ export default class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      userList: null
+      userList: null,
+      userId: null
     };
+    this.profileClick = this.profileClick.bind(this);
+  }
+
+  profileClick(event) {
+    const targetId = event.target.closest('.card').getAttribute('profileid');
+    this.setState({
+      userId: targetId
+    });
   }
 
   componentDidMount() {
@@ -29,8 +38,8 @@ export default class App extends React.Component {
         <div className="header bg-black h-14 flex items-center">
           <span className="text-white pl-4 text-2xl">Climbr</span>
         </div>
-        <div className="w-full md:max-w-3xl md:mx-auto">
-          <UserCardList userList={this.state.userList} />
+        <div onClick={this.profileClick} className="w-full md:max-w-3xl md:mx-auto">
+          <UserCardList clickEvent={this.profileClick} userList={this.state.userList} />
         </div>
       </div>
     );
