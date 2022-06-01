@@ -8,13 +8,13 @@ create schema "public";
 
 CREATE TABLE "public"."user" (
 	"userId" serial NOT NULL,
-	"hashedPassword" TEXT NOT NULL,
-	"username" TEXT NOT NULL,
-	"description" TEXT NOT NULL,
+	"hashedPassword" TEXT,
+	"userName" TEXT NOT NULL,
+	"userDescription" TEXT NOT NULL,
 	"imageUrl" TEXT NOT NULL,
-	"latitude" float8 NOT NULL,
-	"longitude" float8 NOT NULL,
-	"skillLevelId" int NOT NULL,
+	"latitude" float8,
+	"longitude" float8,
+	"skillLevelId" int,
 	CONSTRAINT "user_pk" PRIMARY KEY ("userId")
 ) WITH (
   OIDS=FALSE
@@ -45,7 +45,7 @@ CREATE TABLE "public"."chat" (
 
 CREATE TABLE "public"."skillLevels" (
 	"skillLevelId" serial NOT NULL,
-	"label" serial NOT NULL,
+	"label" TEXT NOT NULL,
 	CONSTRAINT "skillLevels_pk" PRIMARY KEY ("skillLevelId")
 ) WITH (
   OIDS=FALSE

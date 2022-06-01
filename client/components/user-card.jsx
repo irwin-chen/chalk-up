@@ -1,20 +1,23 @@
 import React from 'react';
 
 export default function UserCard(props) {
-  const userTags = userTagsList.map(entry => {
+  const { userProfile } = props;
+  const profileTags = userProfile.tags.map(entry => {
     return (
-      <div class="badge badge-outline">{tag}</div>
-    )
+      <div className="badge badge-outline" key={entry.tagId}>{entry.label}</div>
+    );
   });
   return (
-    <div class="card w-96 bg-base-100 shadow-xl">
-      <figure><img src={imageUrl} /></figure>
-      <div class="card-body">
-        <h2 class="card-title">{userName}}</h2>
-        <p>{userDescription}</p>
-        <p className="flex">
-          {userTags}
+    <div className="card w-96 bg-base-100 shadow-xl">
+      <figure><img src={`../server/public/images/${userProfile.imageUrl}`} /></figure>
+      <div className="card-body">
+        <h2 className="card-title">{userProfile.userName}</h2>
+        <p>
+          {userProfile.userDescription}
         </p>
+        <div className="flex">
+          {profileTags}
+        </div>
       </div>
     </div>
   );
