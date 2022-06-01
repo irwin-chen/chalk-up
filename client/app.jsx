@@ -25,11 +25,13 @@ export default class App extends React.Component {
       return null;
     }
     return (
-      <div className="body font-mono">
+      <div className="body font-mono bg-slate-50">
         <div className="header bg-black h-14 flex items-center">
           <span className="text-white pl-4 text-2xl">Climbr</span>
         </div>
-        <UserCardList userList={this.state.userList}/>
+        <div className="w-full md:max-w-3xl md:mx-auto">
+          <UserCardList userList={this.state.userList} />
+        </div>
       </div>
     );
   }

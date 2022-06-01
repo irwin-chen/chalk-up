@@ -9,7 +9,7 @@ export default function UserCardList(props) {
     );
   });
   return (
-    <div>
+    <div className="flex flex-wrap justify-evenly">
       {userCardList}
     </div>
   );
