@@ -20,9 +20,10 @@ if (process.env.NODE_ENV === 'development') {
 
 app.use(express.static(publicPath));
 
-app.get('/api/nearby', (req, res, next) => {
+app.get('/api/users', (req, res, next) => {
   const sql = `
-  select "u"."userName",
+  select "u"."userId",
+         "u"."userName",
          "u"."imageUrl",
          "u"."userDescription",
          "t"."tags"

@@ -10,7 +10,7 @@ export default class App extends React.Component {
   }
 
   componentDidMount() {
-    fetch('/api/nearby', () => {
+    fetch('/api/users', () => {
       'GET';
     })
       .then(response => response.json())
