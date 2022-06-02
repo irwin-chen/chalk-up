@@ -6,7 +6,7 @@ import Profile from './pages/profile';
 function parseRoute(hashedRoute) {
   let route;
   if (hashedRoute.startsWith('#')) {
-    route = hashedRoute.slice(1);
+    route = hashedRoute.replace('#', '');
   }
   if (route.startsWith('profile')) {
     route = route.split('%');
@@ -38,7 +38,14 @@ export default class App extends React.Component {
 
     window.addEventListener('hashchange', () => {
       const [path, targetId] = parseRoute(window.location.hash);
-      const targetRoute = `api/users/${targetId}`;
+      let test;
+      if (targetId) {
+        test = `/${targetId}`;
+      } else {
+        test = '';
+
+      }
+      const targetRoute = `api/users${test}`;
       fetch(targetRoute)
         .then(response => response.json())
         .then(data => {
