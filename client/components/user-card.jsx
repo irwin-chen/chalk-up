@@ -1,10 +1,11 @@
 import React from 'react';
+import ProfileTags from './profile-tags';
 
 export default function UserCard(props) {
   const { userProfile, userId } = props;
   const profileTags = userProfile.tags.map(entry => {
     return (
-      <div className="badge badge-outline mr-2" key={entry.tagId}>{entry.label}</div>
+      <ProfileTags key={entry.tagId} tagLabel={entry.label} />
     );
   });
   return (
