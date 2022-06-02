@@ -9,8 +9,10 @@ export default function UserCardList(props) {
     );
   });
   return (
-    <div className="flex flex-wrap justify-evenly">
-      {userCardList}
+    <div className="w-full md:max-w-3xl md:mx-auto">
+      <div className="flex flex-wrap justify-evenly">
+        {userCardList}
+      </div>
     </div>
   );
 }
