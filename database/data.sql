@@ -4,7 +4,7 @@ insert into "tags" ("label")
             ('lead');
 
 insert into "user" ("userName","userDescription", "imageUrl")
-     values ('Nana and Popo', 'ice climbers', 'image-iceclimbers.jpeg'),
+     values ('Nana and Popo', 'ice climbers', 'image-iceclimbers.webp'),
             ('Geodude', 'used rockclimb, it was super effective!', 'image-geodude.jpeg'),
             ('Fish', 'hmmm', 'image-fish.jpeg'),
             ('Cat', 'YAMERO', 'image-cat.jpeg');

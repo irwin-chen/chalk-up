@@ -46,6 +46,7 @@ app.get('/api/users', (req, res, next) => {
 });
 
 app.get('/api/users/:userId', (req, res, next) => {
+  const params = [Number(req.params.userId)];
   const sql = `
   select "u"."userId",
          "u"."userName",
@@ -62,10 +63,11 @@ app.get('/api/users/:userId', (req, res, next) => {
          where  "userTags"."userId" = "u"."userId"
       ) as "t"
     ) as "t" on true
+    where "userId" = $1
   `;
-  db.query(sql)
+  db.query(sql, params)
     .then(result => {
-      res.json(result.rows[0]);
+      res.json(result.rows);
     })
     .catch(err => next(err));
 });

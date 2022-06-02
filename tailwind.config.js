@@ -4,10 +4,11 @@ module.exports = {
     './client/**/*.{html,js}'
   ],
   theme: {
-    extend: {},
-    width: {
-      card: '47.5%',
-      '4/5': '80%'
+    extend: {
+      width: {
+        card: '47.5%',
+        '19/20': '95%'
+      }
     }
   },
   plugins: [require('daisyui')],

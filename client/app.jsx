@@ -19,13 +19,12 @@ export default class App extends React.Component {
     super(props);
     this.state = {
       userList: null,
-      route: null,
-      profileId: null
+      route: null
     };
   }
 
   componentDidMount() {
-    if (!this.state.route) {
+    if (!this.state.route !== 'profile') {
       fetch('/api/users')
         .then(response => response.json())
         .then(data => {
@@ -39,16 +38,14 @@ export default class App extends React.Component {
 
     window.addEventListener('hashchange', () => {
       const [path, targetId] = parseRoute(window.location.hash);
-      this.setState({
-        route: path,
-        profileId: targetId
-      });
-      fetch(`api/users/${this.state.profileId}`)
+      const targetRoute = `api/users/${targetId}`;
+      fetch(targetRoute)
         .then(response => response.json())
         .then(data => {
           const list = data;
           this.setState({
-            userList: list
+            userList: list,
+            route: path
           });
         });
     });
@@ -57,14 +54,14 @@ export default class App extends React.Component {
   render() {
     if (this.state.route === '') {
       return (
-        <div className="body font-mono bg-slate-50">
+        <div className="body font-mono bg-slate-300 min-h-screen">
           <Header />
           <UserCardList userList={this.state.userList} />
         </div>
       );
     } else if (this.state.route === 'profile') {
       return (
-        <div className="body font-mono bg-slate-50">
+        <div className="body font-mono bg-slate-300 min-h-screen">
           <Header />
           <Profile targetProfile={this.state.userList}/>
         </div>
