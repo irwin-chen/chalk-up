@@ -1,15 +1,16 @@
 import React from 'react';
+import ProfileTags from './profile-tags';
 
 export default function UserCard(props) {
   const { userProfile, userId } = props;
   const profileTags = userProfile.tags.map(entry => {
     return (
-      <div className="badge badge-outline mr-2" key={entry.tagId}>{entry.label}</div>
+      <ProfileTags key={entry.tagId} tagLabel={entry.label} />
     );
   });
   return (
-    <div className="card w-card md:max-w-sm mt-4 bg-base-100 shadow-lg border border-solid border-slate-300" profileid={userId}>
-      <img className="object-cover rounded-lg aspect-square" src={`./images/${userProfile.imageUrl}`}/>
+    <a className="card w-card md:max-w-sm mb-4 bg-base-100 shadow-lg border border-solid border-slate-300" href={`#profile?userId=${userId}`}>
+      <img className="object-cover rounded-lg aspect-[3/4]" src={`./images/${userProfile.imageUrl}`}/>
       <div className="flex flex-auto flex-col gap-2 p-4">
         <h2 className="card-title">{userProfile.userName}</h2>
         <p className="overflow-hidden whitespace-nowrap text-ellipsis">
@@ -19,6 +20,6 @@ export default function UserCard(props) {
           {profileTags}
         </div>
       </div>
-    </div>
+    </a>
   );
 }

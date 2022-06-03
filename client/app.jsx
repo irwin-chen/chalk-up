@@ -1,45 +1,46 @@
 import React from 'react';
 import UserCardList from './pages/user-card-list';
+import Header from './components/header';
+import Profile from './pages/profile';
+import NoContent from './pages/no-content';
+import parseRoute from './lib/parse-route';
 
 export default class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      userList: null,
-      userId: null
+      route: {
+        path: ''
+      }
     };
-    this.profileClick = this.profileClick.bind(this);
-  }
-
-  profileClick(event) {
-    const targetId = event.target.closest('.card').getAttribute('profileid');
-    this.setState({
-      userId: targetId
-    });
   }
 
   componentDidMount() {
-    fetch('/api/users', () => {
-      'GET';
-    })
-      .then(response => response.json())
-      .then(data => {
-        const list = data;
-        this.setState({ userList: list });
+    window.addEventListener('hashchange', () => {
+      this.setState({
+        route: parseRoute(window.location.hash)
       });
+    });
+  }
+
+  renderPage() {
+    const { route } = this.state;
+    if (route.path === '') {
+      return <UserCardList />;
+    } else if (route.path === 'profile') {
+      return <Profile profileId={route.params.get('userId')} />;
+    } else {
+      return <NoContent />;
+    }
   }
 
   render() {
-    if (!this.state.userList) {
-      return null;
-    }
+    if (this.state.route.path === null) return null;
     return (
-      <div className="body font-mono bg-slate-50">
-        <div className="header bg-black h-14 flex items-center">
-          <span className="text-white pl-4 text-2xl">Climbr</span>
-        </div>
-        <div onClick={this.profileClick} className="w-full md:max-w-3xl md:mx-auto">
-          <UserCardList clickEvent={this.profileClick} userList={this.state.userList} />
+      <div className="body font-mono bg-slate-300 min-h-screen">
+        <Header />
+        <div>
+          {this.renderPage()}
         </div>
       </div>
     );
