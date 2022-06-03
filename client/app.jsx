@@ -2,16 +2,15 @@ import React from 'react';
 import UserCardList from './pages/user-card-list';
 import Header from './components/header';
 import Profile from './pages/profile';
+import NoContent from './pages/no-content';
 
-function parseRoute(hashedRoute) {
-  let route;
-  if (hashedRoute.startsWith('#')) {
-    route = hashedRoute.replace('#', '');
+function parseRoute(hashRoute) {
+  if (hashRoute.startsWith('#')) {
+    hashRoute = hashRoute.replace('#', '');
   }
-  if (route.startsWith('profile')) {
-    route = route.split('%');
-  }
-  return route;
+  const [path, queryString] = hashRoute.split('?');
+  const params = new URLSearchParams(queryString);
+  return { path, params };
 }
 
 export default class App extends React.Component {
@@ -19,61 +18,57 @@ export default class App extends React.Component {
     super(props);
     this.state = {
       userList: null,
-      route: null
+      route: parseRoute(window.location.hash)
     };
   }
 
   componentDidMount() {
-    if (!this.state.route !== 'profile') {
-      fetch('/api/users')
-        .then(response => response.json())
-        .then(data => {
-          const list = data;
-          this.setState({
-            userList: list,
-            route: ''
-          });
+    fetch('/api/users')
+      .then(response => response.json())
+      .then(data => {
+        const list = data;
+        this.setState({
+          userList: list,
+          route: ''
         });
-    }
+      });
 
     window.addEventListener('hashchange', () => {
-      const [path, targetId] = parseRoute(window.location.hash);
-      let test;
-      if (targetId) {
-        test = `/${targetId}`;
-      } else {
-        test = '';
-
-      }
-      const targetRoute = `api/users${test}`;
-      fetch(targetRoute)
-        .then(response => response.json())
-        .then(data => {
-          const list = data;
-          this.setState({
-            userList: list,
-            route: path
+      this.setState({
+        route: parseRoute(window.location.hash)
+      }, () => {
+        const { route } = this.state;
+        fetch(`api/users/${route.params.get('user')}`)
+          .then(response => response.json())
+          .then(data => {
+            const list = data;
+            this.setState({
+              userList: list
+            });
           });
-        });
+      });
     });
   }
 
-  render() {
+  renderPage() {
+    const { route } = this.state;
     if (this.state.route === '') {
-      return (
-        <div className="body font-mono bg-slate-300 min-h-screen">
-          <Header />
-          <UserCardList userList={this.state.userList} />
-        </div>
-      );
-    } else if (this.state.route === 'profile') {
-      return (
-        <div className="body font-mono bg-slate-300 min-h-screen">
-          <Header />
-          <Profile targetProfile={this.state.userList}/>
-        </div>
-      );
+      return <UserCardList userList={this.state.userList} />;
+    } else if (route.path === 'profile') {
+      return <Profile targetProfile={this.state.userList} />;
+    } else {
+      return <NoContent />;
     }
+  }
 
+  render() {
+    return (
+      <div className="body font-mono bg-slate-300 min-h-screen">
+        <Header />
+        <div>
+          {this.renderPage()}
+        </div>
+      </div>
+    );
   }
 }

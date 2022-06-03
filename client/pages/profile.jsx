@@ -9,7 +9,7 @@ export default function Profile(props) {
     );
   });
   return (
-    <div className="flex flex-col items-center">
+    <div className="flex flex-col items-center max-w-xl mx-auto">
       <div className="w-19/20 mb-2">
         <img className="aspect-[10/11] object-cover w-full shadow-md rounded-lg" src={`./images/${targetProfile.imageUrl}`}></img>
       </div>
