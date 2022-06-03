@@ -4,6 +4,7 @@ import Header from './components/header';
 import Profile from './pages/profile';
 import NoContent from './pages/no-content';
 import parseRoute from './lib/parse-route';
+import Chatroom from './pages/chat-room';
 
 export default class App extends React.Component {
   constructor(props) {
@@ -26,11 +27,33 @@ export default class App extends React.Component {
   renderPage() {
     const { route } = this.state;
     if (route.path === '') {
-      return <UserCardList />;
+      return (
+      <>
+          <Header />
+          <UserCardList />
+      </>
+      );
     } else if (route.path === 'profile') {
-      return <Profile profileId={route.params.get('userId')} />;
+      return (
+        <>
+          <Header />
+          <Profile profileId={route.params.get('userId')} />
+        </>
+      );
+    } else if (route.path === 'chat') {
+      return (
+        <>
+          <Header targetId={route.params.get('userId')}/>
+          <Chatroom targetId={route.params.get('userId')} />
+        </>
+      );
     } else {
-      return <NoContent />;
+      return (
+        <>
+          <Header />
+          <NoContent />
+        </>
+      );
     }
   }
 
@@ -38,10 +61,7 @@ export default class App extends React.Component {
     if (this.state.route.path === null) return null;
     return (
       <div className="body font-mono bg-slate-300 min-h-screen">
-        <Header />
-        <div>
-          {this.renderPage()}
-        </div>
+        {this.renderPage()}
       </div>
     );
   }
