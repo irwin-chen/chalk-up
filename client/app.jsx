@@ -3,14 +3,18 @@ import UserCardList from './pages/user-card-list';
 import Header from './components/header';
 import Profile from './pages/profile';
 import NoContent from './pages/no-content';
+import parseRoute from './lib/parse-route';
 
-function parseRoute(hashRoute) {
-  if (hashRoute.startsWith('#')) {
-    hashRoute = hashRoute.replace('#', '');
+
+function Redirect(props) {
+  const url = new URL(window.location);
+  if (props.to === '') {
+    url.hash = '#';
+  } else {
+    url.hash = props.to;
   }
-  const [path, queryString] = hashRoute.split('?');
-  const params = new URLSearchParams(queryString);
-  return { path, params };
+  window.location.replace(url);
+  return null;
 }
 
 export default class App extends React.Component {
@@ -18,7 +22,7 @@ export default class App extends React.Component {
     super(props);
     this.state = {
       userList: null,
-      route: parseRoute(window.location.hash)
+      route: null
     };
   }
 
@@ -29,7 +33,9 @@ export default class App extends React.Component {
         const list = data;
         this.setState({
           userList: list,
-          route: ''
+          route: {
+            path: ''
+          }
         });
       });
 
@@ -52,7 +58,7 @@ export default class App extends React.Component {
 
   renderPage() {
     const { route } = this.state;
-    if (this.state.route === '') {
+    if (route.path === '') {
       return <UserCardList userList={this.state.userList} />;
     } else if (route.path === 'profile') {
       return <Profile targetProfile={this.state.userList} />;
@@ -62,6 +68,7 @@ export default class App extends React.Component {
   }
 
   render() {
+    if (this.state.userList === null) return null;
     return (
       <div className="body font-mono bg-slate-300 min-h-screen">
         <Header />
