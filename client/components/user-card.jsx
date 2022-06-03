@@ -9,7 +9,7 @@ export default function UserCard(props) {
     );
   });
   return (
-    <a className="card w-card md:max-w-sm mb-4 bg-base-100 shadow-lg border border-solid border-slate-300" href={`#profile?user=${userId}`}>
+    <a className="card w-card md:max-w-sm mb-4 bg-base-100 shadow-lg border border-solid border-slate-300" href={`#profile?userId=${userId}`}>
       <img className="object-cover rounded-lg aspect-[3/4]" src={`./images/${userProfile.imageUrl}`}/>
       <div className="flex flex-auto flex-col gap-2 p-4">
         <h2 className="card-title">{userProfile.userName}</h2>
