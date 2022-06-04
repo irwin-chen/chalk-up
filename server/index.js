@@ -67,7 +67,8 @@ app.get('/api/users/:userId', (req, res, next) => {
   `;
   db.query(sql, params)
     .then(result => {
-      res.json(result.rows);
+      const [entry] = result.rows;
+      res.json(entry);
     })
     .catch(err => next(err));
 });

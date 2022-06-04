@@ -60,7 +60,7 @@ export default class App extends React.Component {
   render() {
     if (this.state.route.path === null) return null;
     return (
-      <div className="body font-mono bg-slate-300 min-h-screen">
+      <div className="body font-mono bg-slate-100 min-h-screen">
         {this.renderPage()}
       </div>
     );

@@ -23,7 +23,7 @@ export default class Profile extends React.Component {
 
   render() {
     if (!this.state.userProfile) return null;
-    const userProfile = this.state.userProfile[0];
+    const { userProfile } = this.state;
     const profileTags = userProfile.tags.map(entry => {
       return (
         <ProfileTags key={entry.tagId} tagLabel={entry.label} />
