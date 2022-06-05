@@ -76,6 +76,22 @@ app.get('/api/user/:userId', (req, res, next) => {
     .catch(err => next(err));
 });
 
+app.use(express.json());
+app.post('/api/messages', (req, res, next) => {
+  const { sender, receiver, content } = req.body;
+  const params = [sender, receiver, content];
+  const sql = `
+  insert into "chat" ("senderId", "recipientId", "messageContent")
+       values ($1, $2, $3)
+    returning *
+  `;
+  db.query(sql, params)
+    .then(result => {
+      const [entry] = result.rows;
+      res.status(201).json(entry);
+    });
+});
+
 app.use(errorMiddleware);
 
 app.listen(process.env.PORT, () => {

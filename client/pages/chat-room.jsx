@@ -18,7 +18,27 @@ export default class Chatroom extends React.Component {
   }
 
   sendMessage(event) {
+
     event.preventDefault();
+    const { sender, receiver } = this.props;
+    const message = {
+      content: this.state.message,
+      sender,
+      receiver
+    };
+    fetch('api/messages', {
+      method: 'Post',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(message)
+    })
+      .then(response => response.json())
+      .then(data => {
+        this.setState({
+          message: ''
+        });
+      });
   }
 
   render() {

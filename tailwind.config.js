@@ -9,6 +9,9 @@ module.exports = {
         card: '47.5%',
         '19/20': '95%',
         '9/10': '90%'
+      },
+      maxWidth: {
+        custom: '25%'
       }
     }
   },

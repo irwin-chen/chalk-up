@@ -45,7 +45,7 @@ export default class App extends React.Component {
       return (
         <>
           <Header targetId={route.params.get('userId')}/>
-          <Chatroom targetId={route.params.get('userId')} />
+          <Chatroom receiver={route.params.get('userId')} sender={this.state.currentUser} />
         </>
       );
     } else {
