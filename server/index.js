@@ -20,7 +20,9 @@ if (process.env.NODE_ENV === 'development') {
 
 app.use(express.static(publicPath));
 
-app.get('/api/users', (req, res, next) => {
+app.get('/api/userList/:currentUser', (req, res, next) => {
+  const { currentUser } = req.params;
+  const params = [currentUser];
   const sql = `
   select "u"."userId",
          "u"."userName",
@@ -37,15 +39,16 @@ app.get('/api/users', (req, res, next) => {
          where  "userTags"."userId" = "u"."userId"
       ) as "t"
     ) as "t" on true
+    where NOT "userId" = $1
   `;
-  db.query(sql)
+  db.query(sql, params)
     .then(result => {
       res.json(result.rows);
     })
     .catch(err => next(err));
 });
 
-app.get('/api/users/:userId', (req, res, next) => {
+app.get('/api/user/:userId', (req, res, next) => {
   const params = [Number(req.params.userId)];
   const sql = `
   select "u"."userId",

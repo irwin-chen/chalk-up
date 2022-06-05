@@ -10,6 +10,7 @@ export default class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      currentUser: 5,
       route: {
         path: ''
       }
@@ -30,7 +31,7 @@ export default class App extends React.Component {
       return (
       <>
           <Header />
-          <UserCardList />
+          <UserCardList currentUser={this.state.currentUser}/>
       </>
       );
     } else if (route.path === 'profile') {

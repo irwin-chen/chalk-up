@@ -7,7 +7,8 @@ insert into "user" ("userName","userDescription", "imageUrl")
      values ('Nana and Popo', 'ice climbers', 'image-iceclimbers.webp'),
             ('Geodude', 'Geodude is a brownish-gray boulder Pokémon. It has bulging, rocky eyebrows, trapezoidal, brown eyes, and a wide mouth. Its arms are muscular with five-fingered hands. Geodude uses its arms to climb steadily up steep mountain paths. Geodude used rockclimb! It was super effective!', 'image-geodude.jpeg'),
             ('Fish', 'hmmm', 'image-fish.jpeg'),
-            ('Cat', 'YAMERO', 'image-cat.jpeg');
+            ('Cat', 'YAMERO', 'image-cat.jpeg'),
+            ('User', 'This is for testing purposes', 'image-dummy-user.jpeg');
 
 insert into "skillLevels" ("label")
      values ('beginner'),
@@ -21,4 +22,5 @@ insert into "userTags" ("userId", "tagId")
             ('2','3'),
             ('3','2'),
             ('4','2'),
-            ('4','3');
+            ('4','3'),
+            ('5','2');

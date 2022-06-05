@@ -11,7 +11,7 @@ export default class Profile extends React.Component {
   }
 
   componentDidMount() {
-    fetch(`api/users/${this.props.profileId}`)
+    fetch(`api/user/${this.props.profileId}`)
       .then(response => response.json())
       .then(data => {
         const entry = data;
