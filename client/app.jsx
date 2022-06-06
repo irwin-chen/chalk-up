@@ -4,6 +4,7 @@ import Profile from './pages/profile';
 import NoContent from './pages/no-content';
 import parseRoute from './lib/parse-route';
 import Chatroom from './pages/chat-room';
+import Messages from './pages/messages';
 
 export default class App extends React.Component {
   constructor(props) {
@@ -26,29 +27,15 @@ export default class App extends React.Component {
   renderPage() {
     const { route } = this.state;
     if (route.path === '') {
-      return (
-      <>
-          <UserCardList />
-      </>
-      );
+      return <UserCardList />;
     } else if (route.path === 'profile') {
-      return (
-        <>
-          <Profile profileId={route.params.get('userId')} />
-        </>
-      );
+      return <Profile profileId={route.params.get('userId')} />;
     } else if (route.path === 'chat') {
-      return (
-        <>
-          <Chatroom targetId={route.params.get('userId')} />
-        </>
-      );
+      return <Chatroom targetId={route.params.get('userId')} />;
+    } else if (route.path === 'messages') {
+      return <Messages />;
     } else {
-      return (
-        <>
-          <NoContent />
-        </>
-      );
+      return <NoContent />;
     }
   }
 

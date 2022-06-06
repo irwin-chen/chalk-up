@@ -26,7 +26,8 @@ export default class Header extends React.Component {
     if (this.state.targetProfile) {
       return (
         <>
-          <a href={`#profile?userId=${targetProfile.userId}`} className="avatar ml-6">
+          <a className="text-white ml-4" href="#messages">&#60;</a>
+          <a href={`#profile?userId=${targetProfile.userId}`} className="avatar ml-4">
             <div className="w-12 rounded-full bg-white">
               <img src={`./images/${targetProfile.imageUrl}`} />
             </div>
@@ -35,13 +36,13 @@ export default class Header extends React.Component {
         </>
       );
     } else {
-      return <a className="text-white pl-4 text-2xl hover:cursor-pointer" href='#'>Climbr</a>;
+      return <a className="text-white w-9/10 mx-auto text-2xl hover:cursor-pointer" href='#'>Climbr</a>;
     }
   }
 
   render() {
     return (
-      <div className="header bg-black h-16 mb-4 flex items-center">
+      <div className="bg-black h-16 mb-4 flex items-center">
         {this.renderHeader()}
       </div>
     );
