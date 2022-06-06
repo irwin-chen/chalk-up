@@ -36,10 +36,8 @@ export default class UserCardList extends React.Component {
     return (
       <>
         <Header />
-        <div className="flex flex-wrap justify-evenly">
+        <div className="w-full md:max-w-3xl md:mx-auto flex flex-wrap justify-evenly">
           {this.userCardList()}
-          <div className="w-full md:max-w-3xl md:mx-auto">
-          </div>
         </div>
       </>
     );
