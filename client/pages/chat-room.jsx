@@ -20,11 +20,8 @@ export default class Chatroom extends React.Component {
 
   sendMessage(event) {
     event.preventDefault();
-    const { sender, receiver } = this.props;
     const message = {
-      content: this.state.message,
-      sender,
-      receiver
+      content: this.state.message
     };
     fetch('api/messages', {
       method: 'Post',
@@ -42,10 +39,10 @@ export default class Chatroom extends React.Component {
   }
 
   render() {
-    const { receiver } = this.props;
+    const { targetId } = this.props;
     return (
       <>
-        <Header targetId={receiver} />
+        <Header targetId={targetId} />
         <div className="w-9/10 h-[80vh] mx-auto sm:max-w-lg rounded-xl shadow-md border border-black mb-4">
         </div>
         <form className="flex justify-center" onSubmit={this.sendMessage}>

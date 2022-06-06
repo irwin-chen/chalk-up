@@ -9,7 +9,6 @@ export default class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      currentUser: 5,
       route: {
         path: ''
       }
@@ -41,7 +40,7 @@ export default class App extends React.Component {
     } else if (route.path === 'chat') {
       return (
         <>
-          <Chatroom receiver={route.params.get('userId')} sender={this.state.currentUser} />
+          <Chatroom targetId={route.params.get('userId')} />
         </>
       );
     } else {
