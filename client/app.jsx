@@ -1,6 +1,5 @@
 import React from 'react';
 import UserCardList from './pages/user-card-list';
-import Header from './components/header';
 import Profile from './pages/profile';
 import NoContent from './pages/no-content';
 import parseRoute from './lib/parse-route';
@@ -30,28 +29,24 @@ export default class App extends React.Component {
     if (route.path === '') {
       return (
       <>
-          <Header />
           <UserCardList currentUser={this.state.currentUser}/>
       </>
       );
     } else if (route.path === 'profile') {
       return (
         <>
-          <Header />
           <Profile profileId={route.params.get('userId')} />
         </>
       );
     } else if (route.path === 'chat') {
       return (
         <>
-          <Header targetId={route.params.get('userId')}/>
           <Chatroom receiver={route.params.get('userId')} sender={this.state.currentUser} />
         </>
       );
     } else {
       return (
         <>
-          <Header />
           <NoContent />
         </>
       );

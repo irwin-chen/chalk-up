@@ -1,4 +1,5 @@
 import React from 'react';
+import Header from '../components/header';
 
 export default class Chatroom extends React.Component {
 
@@ -18,7 +19,6 @@ export default class Chatroom extends React.Component {
   }
 
   sendMessage(event) {
-
     event.preventDefault();
     const { sender, receiver } = this.props;
     const message = {
@@ -42,12 +42,14 @@ export default class Chatroom extends React.Component {
   }
 
   render() {
+    const { receiver } = this.props;
     return (
       <>
-        <div className="w-9/10 h-[80vh] mx-auto rounded-xl shadow-md border border-black mb-4">
+        <Header targetId={receiver} />
+        <div className="w-9/10 h-[80vh] mx-auto sm:max-w-lg rounded-xl shadow-md border border-black mb-4">
         </div>
         <form className="flex justify-center" onSubmit={this.sendMessage}>
-          <input placeholder="Message..." type="text" className="placeholder:text-slate-300 border-slate-600 shadow-sm w-9/10 h-10 rounded-3xl pl-4 focus:outline-slate-200" onChange={this.typeMessage} value={this.state.message} ></input>
+          <input placeholder="Message..." type="text" className="placeholder:text-slate-300 border-slate-600 shadow-sm w-9/10 h-10 rounded-3xl pl-4 sm:max-w-lg focus:outline-slate-200" onChange={this.typeMessage} value={this.state.message} ></input>
         </form>
       </>
     );
