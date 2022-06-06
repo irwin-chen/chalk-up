@@ -1,5 +1,6 @@
 import React from 'react';
 import UserCard from '../components/user-card';
+import Header from '../components/header';
 
 export default class UserCardList extends React.Component {
 
@@ -11,7 +12,7 @@ export default class UserCardList extends React.Component {
   }
 
   componentDidMount() {
-    fetch('/api/users')
+    fetch('/api/userList')
       .then(response => response.json())
       .then(data => {
         const list = data;
@@ -33,11 +34,14 @@ export default class UserCardList extends React.Component {
   render() {
     if (!this.state.userList) return null;
     return (
-      <div className="w-full md:max-w-3xl md:mx-auto">
+      <>
+        <Header />
         <div className="flex flex-wrap justify-evenly">
           {this.userCardList()}
+          <div className="w-full md:max-w-3xl md:mx-auto">
+          </div>
         </div>
-      </div>
+      </>
     );
   }
 }

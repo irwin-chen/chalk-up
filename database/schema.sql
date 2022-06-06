@@ -36,7 +36,7 @@ CREATE TABLE "public"."chat" (
 	"recipientId" int NOT NULL,
 	"senderId" int NOT NULL,
 	"messageContent" TEXT NOT NULL,
-	"createdAt" timestamp with time zone NOT NULL
+	"createdAt" TIMESTAMPTZ DEFAULT Now()
 ) WITH (
   OIDS=FALSE
 );

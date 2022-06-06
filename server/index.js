@@ -20,7 +20,8 @@ if (process.env.NODE_ENV === 'development') {
 
 app.use(express.static(publicPath));
 
-app.get('/api/users', (req, res, next) => {
+app.get('/api/userList', (req, res, next) => {
+  const params = [5];
   const sql = `
   select "u"."userId",
          "u"."userName",
@@ -37,15 +38,16 @@ app.get('/api/users', (req, res, next) => {
          where  "userTags"."userId" = "u"."userId"
       ) as "t"
     ) as "t" on true
+    where NOT "userId" = $1
   `;
-  db.query(sql)
+  db.query(sql, params)
     .then(result => {
       res.json(result.rows);
     })
     .catch(err => next(err));
 });
 
-app.get('/api/users/:userId', (req, res, next) => {
+app.get('/api/user/:userId', (req, res, next) => {
   const params = [Number(req.params.userId)];
   const sql = `
   select "u"."userId",
@@ -67,9 +69,26 @@ app.get('/api/users/:userId', (req, res, next) => {
   `;
   db.query(sql, params)
     .then(result => {
-      res.json(result.rows);
+      const [entry] = result.rows;
+      res.json(entry);
     })
     .catch(err => next(err));
+});
+
+app.use(express.json());
+app.post('/api/messages', (req, res, next) => {
+  const { content } = req.body;
+  const params = [5, 2, content];
+  const sql = `
+  insert into "chat" ("senderId", "recipientId", "messageContent")
+       values ($1, $2, $3)
+    returning *
+  `;
+  db.query(sql, params)
+    .then(result => {
+      const [entry] = result.rows;
+      res.status(201).json(entry);
+    });
 });
 
 app.use(errorMiddleware);
