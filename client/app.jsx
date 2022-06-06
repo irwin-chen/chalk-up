@@ -28,7 +28,7 @@ export default class App extends React.Component {
     if (route.path === '') {
       return (
       <>
-          <UserCardList currentUser={this.state.currentUser}/>
+          <UserCardList />
       </>
       );
     } else if (route.path === 'profile') {

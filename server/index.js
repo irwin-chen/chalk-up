@@ -20,7 +20,7 @@ if (process.env.NODE_ENV === 'development') {
 
 app.use(express.static(publicPath));
 
-app.get('/api/userList/:currentUser', (req, res, next) => {
+app.get('/api/userList', (req, res, next) => {
   const params = [5];
   const sql = `
   select "u"."userId",

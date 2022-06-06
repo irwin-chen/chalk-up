@@ -12,7 +12,7 @@ export default class UserCardList extends React.Component {
   }
 
   componentDidMount() {
-    fetch(`/api/userList/${this.props.currentUser}`)
+    fetch('/api/userList')
       .then(response => response.json())
       .then(data => {
         const list = data;
