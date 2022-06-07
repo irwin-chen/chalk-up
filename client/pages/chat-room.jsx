@@ -31,25 +31,26 @@ export default class Chatroom extends React.Component {
     const messageList = chat.map(entry => {
       let time = new Date(entry.createdAt);
       time = new Intl.DateTimeFormat('en-us', { dateStyle: 'short', timeStyle: 'short' }).format(time);
+      let order, messageClass, border, timeLabel;
       if (Number(entry.senderId) === 5) {
-        return (
-          <div key={entry.createdAt} className="flex justify-end mb-4">
-            <div className="flex flex-col justify-center">
-              <p className="mr-2 text-xs text-slate-400">{time}</p>
-            </div>
-            <div className="px-4 py-2 bg-white rounded-tl-lg rounded-tr-lg rounded-bl-lg max-w-[85%] inline-block break-words whitespace-pre-line">{entry.messageContent}</div>
-          </div>
-        );
+        messageClass = 'justify-end pr-4';
+        order = '';
+        border = 'rounded-bl-lg';
+        timeLabel = 'mr-2';
       } else {
-        return (
-          <div key={entry.createdAt} className="flex mb-4">
-            <div className="px-4 py-2 bg-white rounded-tl-lg rounded-tr-lg rounded-br-lg max-w-[85%] inline-block break-words whitespace-pre-line">{entry.messageContent}</div>
-            <div className="flex flex-col justify-center">
-              <p className="ml-2 text-xs text-slate-400">{time}</p>
-            </div>
-          </div>
-        );
+        messageClass = '';
+        order = 'order-last';
+        border = 'rounded-br-lg';
+        timeLabel = 'ml-2';
       }
+      return (
+        <div key={entry.createdAt} className={`flex mb-4 ${messageClass}`}>
+          <div className={`flex flex-col justify-center ${order}`}>
+            <p className={`text-xs text-slate-400 ${timeLabel}`}>{time}</p>
+          </div>
+          <div className={`px-4 py-2 bg-white rounded-tl-lg rounded-tr-lg max-w-[85%] inline-block break-words whitespace-pre-line ${border}`}>{entry.messageContent}</div>
+        </div>
+      );
     });
     return messageList;
   }
