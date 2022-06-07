@@ -29,8 +29,9 @@ export default class Chatroom extends React.Component {
     }
     const { chat } = this.state;
     const messageList = chat.map(entry => {
-      let time = new Date(entry.createdAt);
-      time = new Intl.DateTimeFormat('en-us', { dateStyle: 'short', timeStyle: 'short' }).format(time);
+      const time = new Date(entry.createdAt);
+      const hourMin = new Intl.DateTimeFormat('en-us', { timeStyle: 'short' }).format(time);
+      const date = new Intl.DateTimeFormat('en-us', { dateStyle: 'short' }).format(time);
       let order, messageClass, border, timeLabel;
       if (Number(entry.senderId) === 5) {
         messageClass = 'justify-end pr-4';
@@ -45,10 +46,11 @@ export default class Chatroom extends React.Component {
       }
       return (
         <div key={entry.createdAt} className={`flex mb-4 ${messageClass}`}>
-          <div className={`flex flex-col justify-center ${order}`}>
-            <p className={`text-xs text-slate-400 ${timeLabel}`}>{time}</p>
+          <div className={`flex flex-col justify-center text-xs text-slate-400 ${order}`}>
+            <span className={`hidden sm:inline-block ${timeLabel}`}>{date}</span>
+            <span className={timeLabel}>{hourMin}</span>
           </div>
-          <div className={`px-4 py-2 bg-white rounded-tl-lg rounded-tr-lg max-w-[85%] inline-block break-words whitespace-pre-line ${border}`}>{entry.messageContent}</div>
+          <div className={`px-4 py-2 bg-white rounded-tl-lg rounded-tr-lg max-w-[80%] inline-block break-words whitespace-pre-line ${border}`}>{entry.messageContent}</div>
         </div>
       );
     });
