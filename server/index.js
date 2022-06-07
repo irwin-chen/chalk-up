@@ -21,7 +21,7 @@ if (process.env.NODE_ENV === 'development') {
 app.use(express.static(publicPath));
 
 app.get('/api/userList', (req, res, next) => {
-  const params = [2];
+  const params = [5];
   const sql = `
   select "u"."userId",
          "u"."userName",
@@ -75,21 +75,26 @@ app.get('/api/user/:userId', (req, res, next) => {
     .catch(err => next(err));
 });
 
-app.get('api/messages', (req, res, next) => {
+app.get('/api/chat', (req, res, next) => {
   const sql = `
-  select "messageContent",
-         "createdAt",
-    from "chat"
-   group by "senderId"
-   where recipientId = $1
+   select *
+     from "chat"
+    where ("recipientId" = $1 and "senderId" = $2)
+       or ("recipientId" = $2 and "senderId" = $1)
+    order by "createdAt" asc
   `;
-  return sql;
+  const params = [2, 5];
+  db.query(sql, params)
+    .then(result => {
+      res.json(result.rows);
+    })
+    .catch(err => next(err));
 });
 
 app.use(express.json());
 app.post('/api/messages', (req, res, next) => {
   const { content } = req.body;
-  const params = [3, 2, content];
+  const params = [5, 2, content];
   const sql = `
   insert into "chat" ("senderId", "recipientId", "messageContent")
        values ($1, $2, $3)
@@ -99,7 +104,8 @@ app.post('/api/messages', (req, res, next) => {
     .then(result => {
       const [entry] = result.rows;
       res.status(201).json(entry);
-    });
+    })
+    .catch(err => next(err));
 });
 
 app.use(errorMiddleware);
