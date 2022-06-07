@@ -11,13 +11,13 @@ export default class Messages extends React.Component {
   }
 
   componentDidMount() {
-    fetch('api/messages')
-      .then(response => response.json())
-      .then(data => {
-        this.setState({
-          list: data
-        });
-      });
+    // fetch('api/messages')
+    //   .then(response => response.json())
+    //   .then(data => {
+    //     this.setState({
+    //       list: data
+    //     });
+    //   });
   }
 
   messageList() {
