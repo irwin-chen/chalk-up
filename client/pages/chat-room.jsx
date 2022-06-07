@@ -29,11 +29,13 @@ export default class Chatroom extends React.Component {
     }
     const { chat } = this.state;
     const messageList = chat.map(entry => {
+      let time = new Date(entry.createdAt);
+      time = new Intl.DateTimeFormat('en-us', { dateStyle: 'short', timeStyle: 'short' }).format(time);
       if (Number(entry.senderId) === 5) {
         return (
           <div key={entry.createdAt} className="flex justify-end mb-4">
             <div className="flex flex-col justify-center">
-              <p className="mr-2 text-xs text-slate-400">{entry.createdAt}</p>
+              <p className="mr-2 text-xs text-slate-400">{time}</p>
             </div>
             <div className="px-4 py-2 bg-white rounded-tl-lg rounded-tr-lg rounded-bl-lg max-w-[85%] inline-block break-words whitespace-pre-line">{entry.messageContent}</div>
           </div>
@@ -43,7 +45,7 @@ export default class Chatroom extends React.Component {
           <div key={entry.createdAt} className="flex mb-4">
             <div className="px-4 py-2 bg-white rounded-tl-lg rounded-tr-lg rounded-br-lg max-w-[85%] inline-block break-words whitespace-pre-line">{entry.messageContent}</div>
             <div className="flex flex-col justify-center">
-              <p className="ml-2 text-xs text-slate-400">{entry.createdAt}</p>
+              <p className="ml-2 text-xs text-slate-400">{time}</p>
             </div>
           </div>
         );
@@ -72,10 +74,7 @@ export default class Chatroom extends React.Component {
     })
       .then(response => response.json())
       .then(data => {
-        const { chat } = this.state;
-        chat.push(data);
         this.setState({
-          chat,
           message: ''
         });
       });
