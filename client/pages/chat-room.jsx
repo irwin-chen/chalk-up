@@ -1,5 +1,6 @@
 import React from 'react';
 import Header from '../components/header';
+import { io } from 'socket.io-client';
 
 export default class Chatroom extends React.Component {
 
@@ -14,6 +15,14 @@ export default class Chatroom extends React.Component {
   }
 
   componentDidMount() {
+    const { fromUser, toUser } = this.props;
+    const socket = io('/', {
+      query: {
+        toUser: Number(toUser),
+        fromUser: Number(fromUser)
+      }
+    });
+
     fetch('/api/chat')
       .then(response => response.json())
       .then(data => {
@@ -21,19 +30,28 @@ export default class Chatroom extends React.Component {
           chat: data
         });
       });
+
+    socket.on('message', message => {
+      const { chat } = this.state;
+      const updatedChat = chat.concat([message]);
+      this.setState({
+        chat: updatedChat
+      });
+    });
   }
 
   displayMessage() {
     if (!this.state.chat) {
       return null;
     }
+    const { fromUser } = this.props;
     const { chat } = this.state;
     const messageList = chat.map(entry => {
       const time = new Date(entry.createdAt);
       const hourMin = new Intl.DateTimeFormat('en-us', { timeStyle: 'short' }).format(time);
       const date = new Intl.DateTimeFormat('en-us', { dateStyle: 'short' }).format(time);
       let order, messageClass, border, timeLabel;
-      if (Number(entry.senderId) === 5) {
+      if (entry.senderId === Number(fromUser)) {
         messageClass = 'justify-end pr-4';
         order = '';
         border = 'rounded-bl-lg';
@@ -65,9 +83,14 @@ export default class Chatroom extends React.Component {
 
   sendMessage(event) {
     event.preventDefault();
+
+    const { fromUser, toUser } = this.props;
     const message = {
-      content: this.state.message
+      message: this.state.message,
+      toUser: Number(toUser),
+      fromUser: Number(fromUser)
     };
+
     fetch('api/messages', {
       method: 'Post',
       headers: {
@@ -75,7 +98,6 @@ export default class Chatroom extends React.Component {
       },
       body: JSON.stringify(message)
     })
-      .then(response => response.json())
       .then(data => {
         this.setState({
           message: ''
@@ -84,10 +106,10 @@ export default class Chatroom extends React.Component {
   }
 
   render() {
-    const { targetId } = this.props;
+    const { toUser } = this.props;
     return (
       <>
-        <Header targetId={targetId} />
+        <Header targetId={toUser} />
         <div className="w-9/10 h-[80vh] mx-auto sm:max-w-lg mb-8 overflow-auto">
           {this.displayMessage()}
         </div>

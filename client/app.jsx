@@ -31,7 +31,7 @@ export default class App extends React.Component {
     } else if (route.path === 'profile') {
       return <Profile profileId={route.params.get('userId')} />;
     } else if (route.path === 'chat') {
-      return <Chatroom targetId={route.params.get('userId')} />;
+      return <Chatroom toUser={route.params.get('userId')} fromUser={route.params.get('fromUser')} />;
     } else if (route.path === 'messages') {
       return <Messages />;
     } else {
