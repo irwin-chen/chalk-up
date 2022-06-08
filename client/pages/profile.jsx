@@ -45,7 +45,7 @@ export default class Profile extends React.Component {
             <p className="text-xl font-bold">Tags</p>
             {profileTags}
           </div>
-          <a className="btn btn-wide" href={`#chat?userId=${userProfile.userId}`}>Start Chat</a>
+          <a className="btn btn-wide" href={`#chat?userId=${userProfile.userId}&fromUser=5`}>Start Chat</a>
         </div>
       </>
     );

@@ -1,4 +1,6 @@
 import React from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faChevronLeft } from '@fortawesome/free-solid-svg-icons';
 
 export default class Header extends React.Component {
   constructor(props) {
@@ -26,7 +28,9 @@ export default class Header extends React.Component {
     if (this.state.targetProfile) {
       return (
         <>
-          <a className="text-white ml-4" href="#messages">&#60;</a>
+          <a className="text-white ml-4" href="#messages">
+            <FontAwesomeIcon icon={faChevronLeft} inverse/>
+          </a>
           <a href={`#profile?userId=${targetProfile.userId}`} className="avatar ml-4">
             <div className="w-12 rounded-full bg-white">
               <img src={`./images/${targetProfile.imageUrl}`} />

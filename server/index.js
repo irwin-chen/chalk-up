@@ -2,9 +2,13 @@ require('dotenv/config');
 const path = require('path');
 const express = require('express');
 const errorMiddleware = require('./error-middleware');
+const { createServer } = require('http');
+const { Server } = require('socket.io');
 const pg = require('pg');
 
 const app = express();
+const server = createServer(app);
+const io = new Server(server);
 const publicPath = path.join(__dirname, 'public');
 
 const db = new pg.Pool({
@@ -19,6 +23,12 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 app.use(express.static(publicPath));
+
+io.on('connection', socket => {
+  const { toUser, fromUser } = socket.handshake.query;
+  const roomId = [toUser, fromUser].sort().join('-');
+  socket.join(roomId);
+});
 
 app.get('/api/userList', (req, res, next) => {
   const params = [5];
@@ -93,8 +103,9 @@ app.get('/api/chat', (req, res, next) => {
 
 app.use(express.json());
 app.post('/api/messages', (req, res, next) => {
-  const { content } = req.body;
-  const params = [5, 2, content];
+  const { fromUser, toUser, message } = req.body;
+  const roomId = [fromUser, toUser].sort().join('-');
+  const params = [fromUser, toUser, message];
   const sql = `
   insert into "chat" ("senderId", "recipientId", "messageContent")
        values ($1, $2, $3)
@@ -103,13 +114,15 @@ app.post('/api/messages', (req, res, next) => {
   db.query(sql, params)
     .then(result => {
       const [entry] = result.rows;
-      res.status(201).json(entry);
+      res.sendStatus(201);
+
+      io.to(roomId).emit('message', entry);
     })
     .catch(err => next(err));
 });
 
 app.use(errorMiddleware);
 
-app.listen(process.env.PORT, () => {
-  process.stdout.write(`\n\napp listening on port ${process.env.PORT}\n\n`);
+server.listen(process.env.PORT, () => {
+  process.stdout.write(`\n\nlistening on port ${process.env.PORT}\n\n`);
 });
