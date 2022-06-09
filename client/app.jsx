@@ -5,6 +5,7 @@ import NoContent from './pages/no-content';
 import parseRoute from './lib/parse-route';
 import Chatroom from './pages/chat-room';
 import Messages from './pages/messages';
+import Account from './pages/create-account';
 
 export default class App extends React.Component {
   constructor(props) {
@@ -34,6 +35,8 @@ export default class App extends React.Component {
       return <Chatroom toUser={route.params.get('userId')} fromUser={route.params.get('fromUser')} />;
     } else if (route.path === 'messages') {
       return <Messages />;
+    } else if (route.path === 'account') {
+      return <Account />;
     } else {
       return <NoContent />;
     }
