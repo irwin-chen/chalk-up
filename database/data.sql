@@ -1,7 +1,10 @@
 insert into "tags" ("label")
      values ('bouldering'),
             ('toprope'),
-            ('lead');
+            ('lead climbing'),
+            ('indoor'),
+            ('outdoor'),
+            ('belaying');
 
 insert into "user" ("userName","userDescription", "imageUrl")
      values ('Nana and Popo', 'ice climbers', 'image-iceclimbers.webp'),

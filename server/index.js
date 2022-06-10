@@ -5,6 +5,9 @@ const errorMiddleware = require('./error-middleware');
 const { createServer } = require('http');
 const { Server } = require('socket.io');
 const pg = require('pg');
+const uploadsMiddleware = require('./uploads-middleware');
+const argon2 = require('argon2');
+const { ClientError } = require('./client-error.js');
 
 const app = express();
 const server = createServer(app);
@@ -52,7 +55,7 @@ app.get('/api/userList', (req, res, next) => {
   `;
   db.query(sql, params)
     .then(result => {
-      res.json(result.rows);
+      res.status(200).json(result.rows);
     })
     .catch(err => next(err));
 });
@@ -119,6 +122,45 @@ app.post('/api/messages', (req, res, next) => {
       io.to(roomId).emit('message', entry);
     })
     .catch(err => next(err));
+});
+
+app.post('/api/register', uploadsMiddleware, (req, res, next) => {
+  const { username, password, firstName, lastName, age, city, userDescription } = req.body;
+  if (!username || !password) {
+    throw new ClientError(400, 'Username and password required');
+  }
+  argon2
+    .hash(password)
+    .then(hashed => {
+      const url = `${req.file.filename}`;
+      let params = [username, hashed, userDescription, firstName, lastName, age, city, url];
+      let sql = `
+        insert into "user" ("userName", "hashedPassword", "userDescription", "firstName", "lastName", "age", "city", "imageUrl")
+        values ($1, $2, $3, $4, $5, $6, $7, $8)
+        returning "userId"
+        `;
+      db.query(sql, params)
+        .then(result => {
+          const [user] = result.rows;
+          const tagsInt = req.body.tagsId.map(entry => {
+            return Number(entry);
+          });
+          params = [user.userId, tagsInt];
+          sql = `
+            insert into "userTags" ("userId" ,"tagId")
+            select $1, unnest($2::int[])
+            returning *
+          `;
+          db.query(sql, params)
+            .then(() => {
+              res.sendStatus(201);
+            })
+            .catch(err => next(err));
+        })
+        .catch(err => next(err));
+    })
+    .catch(err => next(err));
+
 });
 
 app.use(errorMiddleware);

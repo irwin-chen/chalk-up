@@ -15,6 +15,10 @@ CREATE TABLE "public"."user" (
 	"latitude" float8,
 	"longitude" float8,
 	"skillLevelId" int,
+	"age" int,
+	"city" TEXT,
+	"firstName" TEXT,
+	"lastName" TEXT,
 	CONSTRAINT "user_pk" PRIMARY KEY ("userId")
 ) WITH (
   OIDS=FALSE
