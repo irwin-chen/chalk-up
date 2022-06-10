@@ -123,7 +123,7 @@ export default class Register extends React.Component {
             </div>
             <div className="max-w-[25%]">
               <p className="mb-2 font-semibold">Age</p>
-              <input name="age" onChange={this.handleChange} value={this.state.age}required type="number" className="mb-6 w-full px-3 py-2 text-sm leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"></input>
+              <input name="age" min={1} onChange={this.handleChange} value={this.state.age}required type="number" className="mb-6 w-full px-3 py-2 text-sm leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"></input>
             </div>
             <div className="w-[60%]">
               <p className="mb-2 font-semibold">City</p>
