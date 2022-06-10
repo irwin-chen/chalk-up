@@ -7,7 +7,7 @@ const { Server } = require('socket.io');
 const pg = require('pg');
 const uploadsMiddleware = require('./uploads-middleware');
 const argon2 = require('argon2');
-const ClientError = require('client-error.js');
+const { ClientError } = require('./client-error.js');
 
 const app = express();
 const server = createServer(app);
@@ -132,7 +132,7 @@ app.post('/api/register', uploadsMiddleware, (req, res, next) => {
   argon2
     .hash(password)
     .then(hashed => {
-      const url = `/images/${req.file.filename}`;
+      const url = `${req.file.filename}`;
       const params = [username, hashed, userDescription, firstName, lastName, age, city, url];
       const sql = `
         insert into "user" ("userName", "hashedPassword", "userDescription", "firstName", "lastName", "age", "city", "imageUrl")
@@ -140,9 +140,8 @@ app.post('/api/register', uploadsMiddleware, (req, res, next) => {
         returning *
         `;
       db.query(sql, params)
-        .then(result => {
-          const [account] = result.rows;
-          res.send(201).json(account);
+        .then(() => {
+          res.sendStatus(201);
         })
         .catch(err => next(err));
     })

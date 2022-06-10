@@ -4,8 +4,7 @@ insert into "tags" ("label")
             ('lead climbing'),
             ('indoor'),
             ('outdoor'),
-            ('belaying'),
-            ('speed climbing');
+            ('belaying');
 
 insert into "user" ("userName","userDescription", "imageUrl")
      values ('Nana and Popo', 'ice climbers', 'image-iceclimbers.webp'),

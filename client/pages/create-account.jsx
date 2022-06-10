@@ -12,15 +12,22 @@ export default class Register extends React.Component {
       age: '',
       city: '',
       preview: './images/image-empty.jpeg',
-      imageFile: '',
       userDescription: '',
+      bouldering: false,
+      topRope: false,
+      lead: false,
+      indoor: false,
+      outdoor: false,
+      belaying: false,
       clicked: false
     };
+    this.fileInputRef = React.createRef();
     this.handleChange = this.handleChange.bind(this);
     this.createAccount = this.createAccount.bind(this);
     this.showForm = this.showForm.bind(this);
     this.imageUploaded = this.imageUploaded.bind(this);
     this.accountSubmit = this.accountSubmit.bind(this);
+    this.onToggle = this.onToggle.bind(this);
   }
 
   handleChange(event) {
@@ -41,18 +48,20 @@ export default class Register extends React.Component {
   imageUploaded(event) {
     this.setState({
       preview: URL.createObjectURL(event.target.files[0]),
-      imageFile: event.target.files[0]
+      imageFile: this.fileInputRef.current.files[0]
     });
   }
 
   accountSubmit() {
-    const { username, password, firstName, lastName, age, city, imageFile, userDescription } = this.state;
-    const accountInfo = { username, password, firstName, lastName, age, city, imageFile, userDescription };
+    const { username, password, firstName, lastName, age, city, userDescription } = this.state;
+    const accountInfo = { username, password, firstName, lastName, age, city, userDescription };
     const form = new FormData();
 
     for (const prop in accountInfo) {
       form.append(prop, accountInfo[prop]);
     }
+
+    form.append('image', this.fileInputRef.current.files[0]);
 
     window.location.hash = '#log-in';
     fetch('api/register', {
@@ -61,6 +70,14 @@ export default class Register extends React.Component {
     }, () => {
       window.location.hash = '#log-in';
     });
+  }
+
+  onToggle(event) {
+    const fieldName = event.target.name;
+    const newValue = !this.state[fieldName];
+    const update = {};
+    update[fieldName] = newValue;
+    this.setState(update);
   }
 
   createAccount() {
@@ -111,7 +128,7 @@ export default class Register extends React.Component {
               <div className="w-full mx-auto max-w-xs">
                 <label>
                   <p className="text-sm text-center mb-2">click below upload a profile picture</p>
-                  <input required onChange={this.imageUploaded} className="hidden" type="file" accept=".png, .jpg, .jpeg, .gif, .webp"></input>
+                  <input required onChange={this.imageUploaded} ref={this.fileInputRef} className="hidden" type="file" accept=".png, .jpg, .jpeg, .gif, .webp"></input>
                   <img className="object-cover aspect-[5/6] w-full" name="image" src={this.state.preview}></img>
                 </label>
               </div>
@@ -119,6 +136,35 @@ export default class Register extends React.Component {
             <div className="w-full mb-4">
               <p className="mb-2 font-semibold">Profile Description</p>
             <textarea name="userDescription" required onChange={this.handleChange} value={this.state.userDescription} className="resize-none w-full h-40 px-3 py-2 text-sm leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline" placeholder="Type something!"></textarea>
+            </div>
+            <div className="w-full mb-4">
+              <p className="mb-2 font-semibold">Tags</p>
+              <div className="flex justify-center flex-wrap">
+                <label className="label cursor-pointer w-2/3">
+                  <span className="label-text">Bouldering</span>
+                  <input type="checkbox" onChange={this.onToggle} name='bouldering' className="checkbox" />
+                </label>
+                <label className="label cursor-pointer w-2/3">
+                  <span className="label-text">Top Rope</span>
+                  <input type="checkbox" onChange={this.onToggle} name='topRope' className="checkbox" />
+                </label>
+                <label className="label cursor-pointer w-2/3">
+                  <span className="label-text">Lead Climbing</span>
+                  <input type="checkbox" onChange={this.onToggle} name='lead' className="checkbox" />
+                </label>
+                <label className="label cursor-pointer w-2/3">
+                  <span className="label-text">Indoor</span>
+                  <input type="checkbox" onChange={this.onToggle} name='indoor' className="checkbox" />
+                </label>
+                <label className="label cursor-pointer w-2/3">
+                  <span className="label-text">Outdoor</span>
+                  <input type="checkbox" onChange={this.onToggle} name='outdoor' className="checkbox" />
+                </label>
+                <label className="label cursor-pointer w-2/3">
+                  <span className="label-text">Belaying</span>
+                  <input type="checkbox" onChange={this.onToggle} name='belaying' className="checkbox" />
+                </label>
+              </div>
             </div>
             <button type="submit" className="mx-auto border border-black rounded-md px-3 py-1 text-md text-white bg-black">Create Account</button>
           </form>
