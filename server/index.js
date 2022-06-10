@@ -55,7 +55,7 @@ app.get('/api/userList', (req, res, next) => {
   `;
   db.query(sql, params)
     .then(result => {
-      res.json(result.rows);
+      res.status(200).json(result.rows);
     })
     .catch(err => next(err));
 });
@@ -133,19 +133,34 @@ app.post('/api/register', uploadsMiddleware, (req, res, next) => {
     .hash(password)
     .then(hashed => {
       const url = `${req.file.filename}`;
-      const params = [username, hashed, userDescription, firstName, lastName, age, city, url];
-      const sql = `
+      let params = [username, hashed, userDescription, firstName, lastName, age, city, url];
+      let sql = `
         insert into "user" ("userName", "hashedPassword", "userDescription", "firstName", "lastName", "age", "city", "imageUrl")
         values ($1, $2, $3, $4, $5, $6, $7, $8)
-        returning *
+        returning "userId"
         `;
       db.query(sql, params)
-        .then(() => {
-          res.sendStatus(201);
+        .then(result => {
+          const [user] = result.rows;
+          const tagsInt = req.body.tagsId.map(entry => {
+            return Number(entry);
+          });
+          params = [user.userId, tagsInt];
+          sql = `
+            insert into "userTags" ("userId" ,"tagId")
+            select $1, unnest($2::int[])
+            returning *
+          `;
+          db.query(sql, params)
+            .then(() => {
+              res.sendStatus(201);
+            })
+            .catch(err => next(err));
         })
         .catch(err => next(err));
     })
     .catch(err => next(err));
+
 });
 
 app.use(errorMiddleware);

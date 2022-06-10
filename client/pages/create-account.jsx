@@ -13,12 +13,12 @@ export default class Register extends React.Component {
       city: '',
       preview: './images/image-empty.jpeg',
       userDescription: '',
-      bouldering: false,
-      topRope: false,
-      lead: false,
-      indoor: false,
-      outdoor: false,
-      belaying: false,
+      1: false,
+      2: false,
+      3: false,
+      4: false,
+      5: false,
+      6: false,
       clicked: false
     };
     this.fileInputRef = React.createRef();
@@ -52,24 +52,30 @@ export default class Register extends React.Component {
     });
   }
 
-  accountSubmit() {
+  accountSubmit(event) {
+    event.preventDefault();
     const { username, password, firstName, lastName, age, city, userDescription } = this.state;
     const accountInfo = { username, password, firstName, lastName, age, city, userDescription };
-    const form = new FormData();
 
+    const form = new FormData();
     for (const prop in accountInfo) {
       form.append(prop, accountInfo[prop]);
     }
 
+    for (let i = 1; i < 7; i++) {
+      if (this.state[i]) {
+        form.append('tagsId', i);
+      }
+    }
     form.append('image', this.fileInputRef.current.files[0]);
 
-    window.location.hash = '#log-in';
-    fetch('api/register', {
+    fetch('/api/register', {
       method: 'POST',
       body: form
-    }, () => {
-      window.location.hash = '#log-in';
-    });
+    })
+      .then(() => {
+        window.location.hash = '#log-in';
+      });
   }
 
   onToggle(event) {
@@ -95,7 +101,7 @@ export default class Register extends React.Component {
           <p className="text-center text-2xl mb-4 font-bold">Create an Account!</p>
           <form autoComplete="off" className={`mx-auto pb-2 w-[85%] ${userCreation}`} onSubmit={this.showForm}>
             <p className="mb-2 font-semibold">Username</p>
-            <input minLength={4} name="username" onChange={this.handleChange} value={this.state.username} type="text" required className="mb-2 w-full px-3 py-2 text-sm leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"></input>
+            <input minLength={6} name="username" onChange={this.handleChange} value={this.state.username} type="text" required className="mb-2 w-full px-3 py-2 text-sm leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"></input>
             <p className="mb-2 font-semibold">Password</p>
             <input minLength={6} name="password" onChange={this.handleChange} value={this.state.password} type="password" required className="mb-6 w-full px-3 py-2 text-sm leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"></input>
             <div className="flex justify-between ">
@@ -142,27 +148,27 @@ export default class Register extends React.Component {
               <div className="flex justify-center flex-wrap">
                 <label className="label cursor-pointer w-2/3">
                   <span className="label-text">Bouldering</span>
-                  <input type="checkbox" onChange={this.onToggle} name='bouldering' className="checkbox" />
+                  <input type="checkbox" onChange={this.onToggle} name={1} className="checkbox" />
                 </label>
                 <label className="label cursor-pointer w-2/3">
                   <span className="label-text">Top Rope</span>
-                  <input type="checkbox" onChange={this.onToggle} name='topRope' className="checkbox" />
+                  <input type="checkbox" onChange={this.onToggle} name={2} className="checkbox" />
                 </label>
                 <label className="label cursor-pointer w-2/3">
                   <span className="label-text">Lead Climbing</span>
-                  <input type="checkbox" onChange={this.onToggle} name='lead' className="checkbox" />
+                  <input type="checkbox" onChange={this.onToggle} name={3} className="checkbox" />
                 </label>
                 <label className="label cursor-pointer w-2/3">
                   <span className="label-text">Indoor</span>
-                  <input type="checkbox" onChange={this.onToggle} name='indoor' className="checkbox" />
+                  <input type="checkbox" onChange={this.onToggle} name={4} className="checkbox" />
                 </label>
                 <label className="label cursor-pointer w-2/3">
                   <span className="label-text">Outdoor</span>
-                  <input type="checkbox" onChange={this.onToggle} name='outdoor' className="checkbox" />
+                  <input type="checkbox" onChange={this.onToggle} name={5} className="checkbox" />
                 </label>
                 <label className="label cursor-pointer w-2/3">
                   <span className="label-text">Belaying</span>
-                  <input type="checkbox" onChange={this.onToggle} name='belaying' className="checkbox" />
+                  <input type="checkbox" onChange={this.onToggle} name={6} className="checkbox" />
                 </label>
               </div>
             </div>
