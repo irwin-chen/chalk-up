@@ -5,6 +5,7 @@ const errorMiddleware = require('./error-middleware');
 const { createServer } = require('http');
 const { Server } = require('socket.io');
 const pg = require('pg');
+const uploadsMiddleware = require('./uploads-middleware');
 
 const app = express();
 const server = createServer(app);
@@ -119,6 +120,10 @@ app.post('/api/messages', (req, res, next) => {
       io.to(roomId).emit('message', entry);
     })
     .catch(err => next(err));
+});
+
+app.post('/api/registration', uploadsMiddleware, (req, res, next) => {
+
 });
 
 app.use(errorMiddleware);
