@@ -6,6 +6,8 @@ const { createServer } = require('http');
 const { Server } = require('socket.io');
 const pg = require('pg');
 const uploadsMiddleware = require('./uploads-middleware');
+const argon2 = require('argon2');
+const ClientError = require('client-error.js');
 
 const app = express();
 const server = createServer(app);
@@ -122,8 +124,29 @@ app.post('/api/messages', (req, res, next) => {
     .catch(err => next(err));
 });
 
-app.post('/api/registration', uploadsMiddleware, (req, res, next) => {
-
+app.post('/api/register', uploadsMiddleware, (req, res, next) => {
+  const { username, password, firstName, lastName, age, city, userDescription } = req.body;
+  if (!username || !password) {
+    throw new ClientError(400, 'Username and password required');
+  }
+  argon2
+    .hash(password)
+    .then(hashed => {
+      const url = `/images/${req.file.filename}`;
+      const params = [username, hashed, userDescription, firstName, lastName, age, city, url];
+      const sql = `
+        insert into "user" ("userName", "hashedPassword", "userDescription", "firstName", "lastName", "age", "city", "imageUrl")
+        values ($1, $2, $3, $4, $5, $6, $7, $8)
+        returning *
+        `;
+      db.query(sql, params)
+        .then(result => {
+          const [account] = result.rows;
+          res.send(201).json(account);
+        })
+        .catch(err => next(err));
+    })
+    .catch(err => next(err));
 });
 
 app.use(errorMiddleware);
