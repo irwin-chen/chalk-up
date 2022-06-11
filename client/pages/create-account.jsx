@@ -19,7 +19,7 @@ export default class Register extends React.Component {
       4: false,
       5: false,
       6: false,
-      clicked: false
+      nextForm: false
     };
     this.fileInputRef = React.createRef();
     this.handleChange = this.handleChange.bind(this);
@@ -40,10 +40,25 @@ export default class Register extends React.Component {
 
   firstSubmit(event) {
     event.preventDefault();
+    const { username, password } = this.state;
+
     if (this.props.path === 'register') {
       this.setState({
-        clicked: true
+        nextForm: true
       });
+    }
+
+    const loginInfo = { username, password };
+
+    if (this.props.path === 'sign-in') {
+      fetch('/api/signin', {
+        method: 'POST',
+        body: JSON.stringify(loginInfo)
+      })
+        .then(result => {
+          this.props.signIn(result);
+          window.location.hash = '#';
+        });
     }
   }
 
@@ -103,7 +118,7 @@ export default class Register extends React.Component {
       hrefText = 'sign-in';
     }
 
-    if (this.state.clicked && this.props.path === 'register') {
+    if (this.state.nextForm && this.props.path === 'register') {
       userCreation = 'hidden';
       entryForm = 'block';
     } else {
@@ -120,7 +135,7 @@ export default class Register extends React.Component {
             <p className="mb-2 font-semibold">Password</p>
             <input minLength={6} name="password" onChange={this.handleChange} value={this.state.password} type="password" required className="mb-6 w-full px-3 py-2 text-sm leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"></input>
             <div className="flex justify-between ">
-              <a href={`#${hrefText}`} className="text-sm">{toggleText}</a>
+              <a href={`#${hrefText}`} className="text-sm underline">{toggleText}</a>
               <button type="submit" className="border border-black rounded-md px-3 py-1 text-md text-white bg-black">{buttonText}</button>
             </div>
           </form>

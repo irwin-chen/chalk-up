@@ -11,10 +11,19 @@ export default class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      user: null,
       route: {
         path: ''
       }
     };
+  }
+
+  signIn(result) {
+    const { user, token } = result;
+    window.localStorage.setItem('userToken', token);
+    this.setState({
+      user
+    });
   }
 
   componentDidMount() {
@@ -36,7 +45,7 @@ export default class App extends React.Component {
     } else if (route.path === 'messages') {
       return <Messages />;
     } else if (route.path === 'sign-in' || route.path === 'register') {
-      return <Account path={route.path} />;
+      return <Account path={route.path} signIn={this.signIn} />;
     } else {
       return <NoContent />;
     }

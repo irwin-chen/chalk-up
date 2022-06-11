@@ -8,6 +8,7 @@ const pg = require('pg');
 const uploadsMiddleware = require('./uploads-middleware');
 const argon2 = require('argon2');
 const { ClientError } = require('./client-error.js');
+const jwt = require('jsonwebtoken');
 
 const app = express();
 const server = createServer(app);
@@ -26,6 +27,37 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 app.use(express.static(publicPath));
+app.use(express.json());
+
+app.post('/api/signin', (req, res, next) => {
+  const { username, password } = req.body;
+  const params = [username];
+  const sql = `
+    select "userId", "hashedPassword"
+      from "user"
+      where "username" = $1
+  `;
+  db.query(sql, params)
+    .then(result => {
+      const [user] = result.rows;
+      if (!user) {
+        throw new ClientError(401, 'invalid username');
+      }
+      const { userId, hashedPassword } = user;
+      argon2
+        .verify(hashedPassword, password)
+        .then(result => {
+          if (!result) {
+            throw new ClientError(401, 'invalid password');
+          }
+          const payload = { userId, username };
+          const token = jwt.sign(payload, process.env.TOKEN_SECRET);
+          res.status(200).json({ token, user: payload });
+        })
+        .catch(err => next(err));
+    })
+    .catch(err => next(err));
+});
 
 io.on('connection', socket => {
   const { toUser, fromUser } = socket.handshake.query;
@@ -104,7 +136,6 @@ app.get('/api/chat', (req, res, next) => {
     .catch(err => next(err));
 });
 
-app.use(express.json());
 app.post('/api/messages', (req, res, next) => {
   const { fromUser, toUser, message } = req.body;
   const roomId = [fromUser, toUser].sort().join('-');
