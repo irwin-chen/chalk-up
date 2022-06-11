@@ -35,8 +35,8 @@ export default class App extends React.Component {
       return <Chatroom toUser={route.params.get('userId')} fromUser={route.params.get('fromUser')} />;
     } else if (route.path === 'messages') {
       return <Messages />;
-    } else if (route.path === 'account') {
-      return <Account />;
+    } else if (route.path === 'sign-in' || route.path === 'register') {
+      return <Account path={route.path} />;
     } else {
       return <NoContent />;
     }
