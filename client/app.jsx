@@ -5,7 +5,7 @@ import NoContent from './pages/no-content';
 import parseRoute from './lib/parse-route';
 import Chatroom from './pages/chat-room';
 import Messages from './pages/messages';
-import Account from './pages/create-account';
+import Register from './pages/create-account';
 
 export default class App extends React.Component {
   constructor(props) {
@@ -16,6 +16,7 @@ export default class App extends React.Component {
         path: ''
       }
     };
+    this.signIn = this.signIn.bind(this);
   }
 
   signIn(result) {
@@ -45,7 +46,7 @@ export default class App extends React.Component {
     } else if (route.path === 'messages') {
       return <Messages />;
     } else if (route.path === 'sign-in' || route.path === 'register') {
-      return <Account path={route.path} signIn={this.signIn} />;
+      return <Register path={route.path} signIn={this.signIn} />;
     } else {
       return <NoContent />;
     }

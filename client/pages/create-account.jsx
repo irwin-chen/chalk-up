@@ -41,7 +41,6 @@ export default class Register extends React.Component {
   firstSubmit(event) {
     event.preventDefault();
     const { username, password } = this.state;
-
     if (this.props.path === 'register') {
       this.setState({
         nextForm: true
@@ -53,6 +52,9 @@ export default class Register extends React.Component {
     if (this.props.path === 'sign-in') {
       fetch('/api/signin', {
         method: 'POST',
+        headers: {
+          'Content-Type': 'applicaton/json'
+        },
         body: JSON.stringify(loginInfo)
       })
         .then(result => {
@@ -91,7 +93,7 @@ export default class Register extends React.Component {
       body: form
     })
       .then(() => {
-        window.location.hash = '#log-in';
+        window.location.hash = '#sign-in';
       });
   }
 
@@ -207,10 +209,6 @@ export default class Register extends React.Component {
         </div>
       </>
     );
-  }
-
-  componentDidMount() {
-
   }
 
   componentWillUnmount() {

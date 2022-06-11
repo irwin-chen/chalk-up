@@ -7,7 +7,7 @@ const { Server } = require('socket.io');
 const pg = require('pg');
 const uploadsMiddleware = require('./uploads-middleware');
 const argon2 = require('argon2');
-const { ClientError } = require('./client-error.js');
+const ClientError = require('./client-error.js');
 const jwt = require('jsonwebtoken');
 
 const app = express();
@@ -33,9 +33,10 @@ app.post('/api/signin', (req, res, next) => {
   const { username, password } = req.body;
   const params = [username];
   const sql = `
-    select "userId", "hashedPassword"
+    select "userId",
+           "hashedPassword"
       from "user"
-      where "username" = $1
+      where "userName" = $1
   `;
   db.query(sql, params)
     .then(result => {
