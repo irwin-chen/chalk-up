@@ -48,12 +48,11 @@ export default class Register extends React.Component {
     }
 
     const loginInfo = { username, password };
-
     if (this.props.path === 'sign-in') {
       fetch('/api/signin', {
         method: 'POST',
         headers: {
-          'Content-Type': 'applicaton/json'
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify(loginInfo)
       })
