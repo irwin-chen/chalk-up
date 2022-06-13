@@ -13,7 +13,11 @@ export default class Header extends React.Component {
 
   componentDidMount() {
     if (!Number(this.props.targetId)) return null;
-    fetch(`api/user/${this.props.targetId}`)
+    fetch(`api/user/${this.props.targetId}`, {
+      headers: {
+        'x-access-token': this.props.token
+      }
+    })
       .then(response => response.json())
       .then(data => {
         const entry = data;

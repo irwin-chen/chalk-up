@@ -6,28 +6,35 @@ import parseRoute from './lib/parse-route';
 import Chatroom from './pages/chat-room';
 import Messages from './pages/messages';
 import Register from './pages/create-account';
+import jwtDecode from 'jwt-decode';
 
 export default class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      user: null,
       route: {
-        path: ''
+        path: '#sign-in'
       }
     };
     this.signIn = this.signIn.bind(this);
   }
 
   signIn(result) {
-    const { user, token } = result;
+    const { token } = result;
     window.localStorage.setItem('userToken', token);
-    this.setState({
-      user
-    });
+    window.location.hash = '#';
   }
 
   componentDidMount() {
+    const token = window.localStorage.getItem('userToken');
+    let path = 'sign-in';
+    if (token) {
+      path = '';
+    }
+    this.setState({
+      route: { path }
+    });
+
     window.addEventListener('hashchange', () => {
       this.setState({
         route: parseRoute(window.location.hash)
@@ -36,13 +43,19 @@ export default class App extends React.Component {
   }
 
   renderPage() {
+    const token = window.localStorage.getItem('userToken');
     const { route } = this.state;
+    let user = null;
+    if (token) {
+      user = jwtDecode(token);
+    }
+
     if (route.path === '') {
-      return <UserCardList />;
+      return <UserCardList token={token} user={user} />;
     } else if (route.path === 'profile') {
-      return <Profile profileId={route.params.get('userId')} />;
+      return <Profile profileId={route.params.get('userId')} token={token} />;
     } else if (route.path === 'chat') {
-      return <Chatroom toUser={route.params.get('userId')} fromUser={route.params.get('fromUser')} />;
+      return <Chatroom toUser={route.params.get('userId')} token={token} fromUser={user} />;
     } else if (route.path === 'messages') {
       return <Messages />;
     } else if (route.path === 'sign-in' || route.path === 'register') {
@@ -53,7 +66,6 @@ export default class App extends React.Component {
   }
 
   render() {
-    if (this.state.route.path === null) return null;
     return (
       <div className="body font-mono bg-slate-100 min-h-screen">
         {this.renderPage()}

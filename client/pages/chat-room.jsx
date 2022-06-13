@@ -16,6 +16,11 @@ export default class Chatroom extends React.Component {
 
   componentDidMount() {
     const { fromUser, toUser } = this.props;
+    const users = {
+      toUser: Number(toUser),
+      fromUser: fromUser.userId
+    };
+
     const socket = io('/', {
       query: {
         toUser: Number(toUser),
@@ -23,7 +28,14 @@ export default class Chatroom extends React.Component {
       }
     });
 
-    fetch('/api/chat')
+    fetch('/api/chat', {
+      method: 'post',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-access-token': this.props.token
+      },
+      body: JSON.stringify(users)
+    })
       .then(response => response.json())
       .then(data => {
         this.setState({
@@ -51,7 +63,7 @@ export default class Chatroom extends React.Component {
       const hourMin = new Intl.DateTimeFormat('en-us', { timeStyle: 'short' }).format(time);
       const date = new Intl.DateTimeFormat('en-us', { dateStyle: 'short' }).format(time);
       let order, messageClass, border, timeLabel;
-      if (entry.senderId === Number(fromUser)) {
+      if (entry.senderId === fromUser.userId) {
         messageClass = 'justify-end pr-4';
         order = '';
         border = 'rounded-bl-lg';
@@ -84,17 +96,18 @@ export default class Chatroom extends React.Component {
   sendMessage(event) {
     event.preventDefault();
 
-    const { fromUser, toUser } = this.props;
+    const { fromUser, toUser, token } = this.props;
     const message = {
       message: this.state.message,
       toUser: Number(toUser),
-      fromUser: Number(fromUser)
+      fromUser: fromUser.userId
     };
 
     fetch('api/messages', {
       method: 'Post',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'x-access-token': token
       },
       body: JSON.stringify(message)
     })
@@ -109,7 +122,7 @@ export default class Chatroom extends React.Component {
     const { toUser } = this.props;
     return (
       <>
-        <Header targetId={toUser} />
+        <Header targetId={toUser} token={this.props.token} />
         <div className="w-9/10 h-[80vh] mx-auto sm:max-w-lg mb-8 overflow-auto">
           {this.displayMessage()}
         </div>

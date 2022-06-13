@@ -56,6 +56,7 @@ export default class Register extends React.Component {
         },
         body: JSON.stringify(loginInfo)
       })
+        .then(res => res.json())
         .then(result => {
           this.props.signIn(result);
           window.location.hash = '#';

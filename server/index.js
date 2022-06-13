@@ -1,14 +1,16 @@
 require('dotenv/config');
 const path = require('path');
 const express = require('express');
-const errorMiddleware = require('./error-middleware');
 const { createServer } = require('http');
 const { Server } = require('socket.io');
 const pg = require('pg');
-const uploadsMiddleware = require('./uploads-middleware');
 const argon2 = require('argon2');
 const ClientError = require('./client-error.js');
 const jwt = require('jsonwebtoken');
+
+const errorMiddleware = require('./error-middleware');
+const uploadsMiddleware = require('./uploads-middleware');
+const authorizationMiddleware = require('./authorization-middleware');
 
 const app = express();
 const server = createServer(app);
@@ -60,14 +62,55 @@ app.post('/api/signin', (req, res, next) => {
     .catch(err => next(err));
 });
 
+app.post('/api/register', uploadsMiddleware, (req, res, next) => {
+  const { username, password, firstName, lastName, age, city, userDescription } = req.body;
+  if (!username || !password) {
+    throw new ClientError(400, 'Username and password required');
+  }
+  argon2
+    .hash(password)
+    .then(hashed => {
+      const url = `${req.file.filename}`;
+      let params = [username, hashed, userDescription, firstName, lastName, age, city, url];
+      let sql = `
+        insert into "user" ("userName", "hashedPassword", "userDescription", "firstName", "lastName", "age", "city", "imageUrl")
+        values ($1, $2, $3, $4, $5, $6, $7, $8)
+        returning "userId"
+        `;
+      db.query(sql, params)
+        .then(result => {
+          const [user] = result.rows;
+          const tagsInt = req.body.tagsId.map(entry => {
+            return Number(entry);
+          });
+          params = [user.userId, tagsInt];
+          sql = `
+            insert into "userTags" ("userId" ,"tagId")
+            select $1, unnest($2::int[])
+            returning *
+          `;
+          db.query(sql, params)
+            .then(() => {
+              res.sendStatus(201);
+            })
+            .catch(err => next(err));
+        })
+        .catch(err => next(err));
+    })
+    .catch(err => next(err));
+});
+
+app.use(authorizationMiddleware);
+
 io.on('connection', socket => {
   const { toUser, fromUser } = socket.handshake.query;
   const roomId = [toUser, fromUser].sort().join('-');
   socket.join(roomId);
 });
 
-app.get('/api/userList', (req, res, next) => {
-  const params = [5];
+app.post('/api/userList', (req, res, next) => {
+  const { userId } = req.body;
+  const params = [userId];
   const sql = `
   select "u"."userId",
          "u"."userName",
@@ -121,7 +164,8 @@ app.get('/api/user/:userId', (req, res, next) => {
     .catch(err => next(err));
 });
 
-app.get('/api/chat', (req, res, next) => {
+app.post('/api/chat', (req, res, next) => {
+  const { toUser, fromUser } = req.body;
   const sql = `
    select *
      from "chat"
@@ -129,7 +173,7 @@ app.get('/api/chat', (req, res, next) => {
        or ("recipientId" = $2 and "senderId" = $1)
     order by "createdAt" asc
   `;
-  const params = [2, 5];
+  const params = [toUser, fromUser];
   db.query(sql, params)
     .then(result => {
       res.json(result.rows);
@@ -154,45 +198,6 @@ app.post('/api/messages', (req, res, next) => {
       io.to(roomId).emit('message', entry);
     })
     .catch(err => next(err));
-});
-
-app.post('/api/register', uploadsMiddleware, (req, res, next) => {
-  const { username, password, firstName, lastName, age, city, userDescription } = req.body;
-  if (!username || !password) {
-    throw new ClientError(400, 'Username and password required');
-  }
-  argon2
-    .hash(password)
-    .then(hashed => {
-      const url = `${req.file.filename}`;
-      let params = [username, hashed, userDescription, firstName, lastName, age, city, url];
-      let sql = `
-        insert into "user" ("userName", "hashedPassword", "userDescription", "firstName", "lastName", "age", "city", "imageUrl")
-        values ($1, $2, $3, $4, $5, $6, $7, $8)
-        returning "userId"
-        `;
-      db.query(sql, params)
-        .then(result => {
-          const [user] = result.rows;
-          const tagsInt = req.body.tagsId.map(entry => {
-            return Number(entry);
-          });
-          params = [user.userId, tagsInt];
-          sql = `
-            insert into "userTags" ("userId" ,"tagId")
-            select $1, unnest($2::int[])
-            returning *
-          `;
-          db.query(sql, params)
-            .then(() => {
-              res.sendStatus(201);
-            })
-            .catch(err => next(err));
-        })
-        .catch(err => next(err));
-    })
-    .catch(err => next(err));
-
 });
 
 app.use(errorMiddleware);
