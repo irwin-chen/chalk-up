@@ -15,7 +15,7 @@ export default class Chatroom extends React.Component {
   }
 
   componentDidMount() {
-    const { fromUser, toUser } = this.props;
+    const { fromUser, toUser, token } = this.props;
     const users = {
       toUser: Number(toUser),
       fromUser: fromUser.userId
@@ -25,6 +25,9 @@ export default class Chatroom extends React.Component {
       query: {
         toUser: Number(toUser),
         fromUser: Number(fromUser)
+      },
+      extraHeaders: {
+        'x-access-token': token
       }
     });
 
@@ -32,7 +35,7 @@ export default class Chatroom extends React.Component {
       method: 'post',
       headers: {
         'Content-Type': 'application/json',
-        'x-access-token': this.props.token
+        'x-access-token': token
       },
       body: JSON.stringify(users)
     })
@@ -103,7 +106,7 @@ export default class Chatroom extends React.Component {
       fromUser: fromUser.userId
     };
 
-    fetch('api/messages', {
+    fetch('/api/messages', {
       method: 'Post',
       headers: {
         'Content-Type': 'application/json',

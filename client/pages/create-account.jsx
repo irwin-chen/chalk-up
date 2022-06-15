@@ -93,7 +93,12 @@ export default class Register extends React.Component {
       body: form
     })
       .then(() => {
-        window.location.hash = '#sign-in';
+        this.setState({
+          username: '',
+          password: ''
+        }, () => {
+          window.location.hash = '#sign-in';
+        });
       });
   }
 

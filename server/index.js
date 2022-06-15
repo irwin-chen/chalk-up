@@ -101,6 +101,9 @@ app.post('/api/register', uploadsMiddleware, (req, res, next) => {
 });
 
 app.use(authorizationMiddleware);
+io.use((authorizationMiddleware, next) => {
+  next();
+});
 
 io.on('connection', socket => {
   const { toUser, fromUser } = socket.handshake.query;
