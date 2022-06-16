@@ -15,15 +15,22 @@ export default class Chatroom extends React.Component {
   }
 
   componentDidMount() {
-    const { fromUser, toUser } = this.props;
+    const { toUser, token } = this.props;
+
     const socket = io('/', {
       query: {
-        toUser: Number(toUser),
-        fromUser: Number(fromUser)
+        toUser: Number(toUser)
+      },
+      auth: {
+        'x-access-token': token
       }
     });
 
-    fetch('/api/chat')
+    fetch(`/api/chat?toUser=${toUser}`, {
+      headers: {
+        'x-access-token': token
+      }
+    })
       .then(response => response.json())
       .then(data => {
         this.setState({
@@ -51,7 +58,7 @@ export default class Chatroom extends React.Component {
       const hourMin = new Intl.DateTimeFormat('en-us', { timeStyle: 'short' }).format(time);
       const date = new Intl.DateTimeFormat('en-us', { dateStyle: 'short' }).format(time);
       let order, messageClass, border, timeLabel;
-      if (entry.senderId === Number(fromUser)) {
+      if (entry.senderId === fromUser.userId) {
         messageClass = 'justify-end pr-4';
         order = '';
         border = 'rounded-bl-lg';
@@ -84,17 +91,17 @@ export default class Chatroom extends React.Component {
   sendMessage(event) {
     event.preventDefault();
 
-    const { fromUser, toUser } = this.props;
+    const { toUser, token } = this.props;
     const message = {
       message: this.state.message,
-      toUser: Number(toUser),
-      fromUser: Number(fromUser)
+      toUser: Number(toUser)
     };
 
-    fetch('api/messages', {
+    fetch('/api/messages', {
       method: 'Post',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'x-access-token': token
       },
       body: JSON.stringify(message)
     })
@@ -106,10 +113,13 @@ export default class Chatroom extends React.Component {
   }
 
   render() {
-    const { toUser } = this.props;
+    const { toUser, token } = this.props;
+    if (!token) {
+      window.location.hash = '#sign-in';
+    }
     return (
       <>
-        <Header targetId={toUser} />
+        <Header targetId={toUser} token={this.props.token} />
         <div className="w-9/10 h-[80vh] mx-auto sm:max-w-lg mb-8 overflow-auto">
           {this.displayMessage()}
         </div>

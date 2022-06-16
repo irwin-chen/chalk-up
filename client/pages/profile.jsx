@@ -12,7 +12,11 @@ export default class Profile extends React.Component {
   }
 
   componentDidMount() {
-    fetch(`api/user/${this.props.profileId}`)
+    fetch(`api/user/${this.props.profileId}`, {
+      headers: {
+        'x-access-token': this.props.token
+      }
+    })
       .then(response => response.json())
       .then(data => {
         const entry = data;
@@ -23,6 +27,9 @@ export default class Profile extends React.Component {
   }
 
   render() {
+    if (!this.props.token) {
+      window.location.hash = '#sign-in';
+    }
     if (!this.state.userProfile) return null;
     const { userProfile } = this.state;
     let profileTags;
@@ -51,7 +58,7 @@ export default class Profile extends React.Component {
             <p className="text-xl font-bold">Tags</p>
             {profileTags}
           </div>
-          <a className="btn btn-wide" href={`#chat?userId=${userProfile.userId}&fromUser=5`}>Start Chat</a>
+          <a className="btn btn-wide" href={`#chat?userId=${userProfile.userId}`}>Start Chat</a>
         </div>
       </>
     );

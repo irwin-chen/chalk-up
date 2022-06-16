@@ -12,7 +12,14 @@ export default class UserCardList extends React.Component {
   }
 
   componentDidMount() {
-    fetch('/api/userList')
+    fetch('/api/userList', {
+      method: 'post',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-access-token': this.props.token
+      },
+      body: JSON.stringify(this.props.user)
+    })
       .then(response => response.json())
       .then(data => {
         const list = data;
@@ -32,6 +39,9 @@ export default class UserCardList extends React.Component {
   }
 
   render() {
+    if (!this.props.user) {
+      window.location.hash = '#sign-in';
+    }
     if (!this.state.userList) return null;
     return (
       <>

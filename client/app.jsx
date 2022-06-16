@@ -5,19 +5,41 @@ import NoContent from './pages/no-content';
 import parseRoute from './lib/parse-route';
 import Chatroom from './pages/chat-room';
 import Messages from './pages/messages';
-import Account from './pages/create-account';
+import Register from './pages/create-account';
+import jwtDecode from 'jwt-decode';
 
 export default class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      user: null,
       route: {
-        path: ''
+        path: parseRoute(window.location.hash)
       }
     };
+    this.signIn = this.signIn.bind(this);
+  }
+
+  signIn(result) {
+    const { token } = result;
+    window.localStorage.setItem('userToken', token);
+    window.location.hash = '#';
   }
 
   componentDidMount() {
+    const token = window.localStorage.getItem('userToken');
+    if (token) {
+      const user = jwtDecode(token);
+      this.setState({
+        user,
+        route: {
+          path: ''
+        }
+      });
+    } else {
+      window.location.hash = '#sign-in';
+    }
+
     window.addEventListener('hashchange', () => {
       this.setState({
         route: parseRoute(window.location.hash)
@@ -26,24 +48,29 @@ export default class App extends React.Component {
   }
 
   renderPage() {
-    const { route } = this.state;
+    const token = window.localStorage.getItem('userToken');
+    const { route, user } = this.state;
+
+    if (!user) {
+      return;
+    }
+
     if (route.path === '') {
-      return <UserCardList />;
+      return <UserCardList token={token} user={user} />;
     } else if (route.path === 'profile') {
-      return <Profile profileId={route.params.get('userId')} />;
+      return <Profile profileId={route.params.get('userId')} token={token} />;
     } else if (route.path === 'chat') {
-      return <Chatroom toUser={route.params.get('userId')} fromUser={route.params.get('fromUser')} />;
+      return <Chatroom toUser={route.params.get('userId')} token={token} fromUser={user} />;
     } else if (route.path === 'messages') {
       return <Messages />;
-    } else if (route.path === 'account') {
-      return <Account />;
+    } else if (route.path === 'sign-in' || route.path === 'register') {
+      return <Register path={route.path} signIn={this.signIn} />;
     } else {
       return <NoContent />;
     }
   }
 
   render() {
-    if (this.state.route.path === null) return null;
     return (
       <div className="body font-mono bg-slate-100 min-h-screen">
         {this.renderPage()}

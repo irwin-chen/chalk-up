@@ -19,12 +19,12 @@ export default class Register extends React.Component {
       4: false,
       5: false,
       6: false,
-      clicked: false
+      nextForm: false
     };
     this.fileInputRef = React.createRef();
     this.handleChange = this.handleChange.bind(this);
     this.createAccount = this.createAccount.bind(this);
-    this.showForm = this.showForm.bind(this);
+    this.firstSubmit = this.firstSubmit.bind(this);
     this.imageUploaded = this.imageUploaded.bind(this);
     this.accountSubmit = this.accountSubmit.bind(this);
     this.onToggle = this.onToggle.bind(this);
@@ -38,11 +38,29 @@ export default class Register extends React.Component {
     this.setState(update);
   }
 
-  showForm(event) {
+  firstSubmit(event) {
     event.preventDefault();
-    this.setState({
-      clicked: true
-    });
+    const { username, password } = this.state;
+    if (this.props.path === 'register') {
+      this.setState({
+        nextForm: true
+      });
+    }
+
+    const loginInfo = { username, password };
+    if (this.props.path === 'sign-in') {
+      fetch('/api/signin', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(loginInfo)
+      })
+        .then(res => res.json())
+        .then(result => {
+          this.props.signIn(result);
+        });
+    }
   }
 
   imageUploaded(event) {
@@ -74,7 +92,12 @@ export default class Register extends React.Component {
       body: form
     })
       .then(() => {
-        window.location.hash = '#log-in';
+        this.setState({
+          username: '',
+          password: ''
+        }, () => {
+          window.location.hash = '#sign-in';
+        });
       });
   }
 
@@ -87,8 +110,21 @@ export default class Register extends React.Component {
   }
 
   createAccount() {
-    let entryForm, userCreation;
-    if (this.state.clicked) {
+    let entryForm, userCreation, titleText, toggleText, buttonText, hrefText;
+    if (this.props.path === 'sign-in') {
+      titleText = 'Sign in to your account';
+      toggleText = 'Create an account';
+      buttonText = 'Sign in';
+      hrefText = 'register';
+    }
+    if (this.props.path === 'register') {
+      titleText = 'Create an Account';
+      toggleText = 'Sign in instead';
+      buttonText = 'Next';
+      hrefText = 'sign-in';
+    }
+
+    if (this.state.nextForm && this.props.path === 'register') {
       userCreation = 'hidden';
       entryForm = 'block';
     } else {
@@ -98,15 +134,15 @@ export default class Register extends React.Component {
     return (
       <>
         <div className={`w-[95%] max-w-md py-6 mt-28 bg-white mx-auto rounded-lg ${userCreation}`}>
-          <p className="text-center text-2xl mb-4 font-bold">Create an Account!</p>
-          <form autoComplete="off" className={`mx-auto pb-2 w-[85%] ${userCreation}`} onSubmit={this.showForm}>
+          <p className="text-center text-2xl mb-4 font-bold">{titleText}</p>
+          <form autoComplete="off" className={`mx-auto pb-2 w-[85%] ${userCreation}`} onSubmit={this.firstSubmit}>
             <p className="mb-2 font-semibold">Username</p>
             <input minLength={6} name="username" onChange={this.handleChange} value={this.state.username} type="text" required className="mb-2 w-full px-3 py-2 text-sm leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"></input>
             <p className="mb-2 font-semibold">Password</p>
             <input minLength={6} name="password" onChange={this.handleChange} value={this.state.password} type="password" required className="mb-6 w-full px-3 py-2 text-sm leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"></input>
             <div className="flex justify-between ">
-              <a href="#sign-in" className="text-sm">Sign in instead</a>
-              <button type="submit" className="border border-black rounded-md px-3 py-1 text-md text-white bg-black">Next</button>
+              <a href={`#${hrefText}`} className="text-sm underline">{toggleText}</a>
+              <button type="submit" className="border border-black rounded-md px-3 py-1 text-md text-white bg-black">{buttonText}</button>
             </div>
           </form>
         </div>
