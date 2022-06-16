@@ -27,6 +27,9 @@ export default class Profile extends React.Component {
   }
 
   render() {
+    if (!this.props.token) {
+      window.location.hash = '#sign-in';
+    }
     if (!this.state.userProfile) return null;
     const { userProfile } = this.state;
     let profileTags;
