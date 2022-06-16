@@ -15,29 +15,21 @@ export default class Chatroom extends React.Component {
   }
 
   componentDidMount() {
-    const { fromUser, toUser, token } = this.props;
-    const users = {
-      toUser: Number(toUser),
-      fromUser: fromUser.userId
-    };
+    const { toUser, token } = this.props;
 
     const socket = io('/', {
       query: {
-        toUser: Number(toUser),
-        fromUser: Number(fromUser)
+        toUser: Number(toUser)
       },
-      extraHeaders: {
+      auth: {
         'x-access-token': token
       }
     });
 
-    fetch('/api/chat', {
-      method: 'post',
+    fetch(`/api/chat?toUser=${toUser}`, {
       headers: {
-        'Content-Type': 'application/json',
         'x-access-token': token
-      },
-      body: JSON.stringify(users)
+      }
     })
       .then(response => response.json())
       .then(data => {
@@ -99,11 +91,10 @@ export default class Chatroom extends React.Component {
   sendMessage(event) {
     event.preventDefault();
 
-    const { fromUser, toUser, token } = this.props;
+    const { toUser, token } = this.props;
     const message = {
       message: this.state.message,
-      toUser: Number(toUser),
-      fromUser: fromUser.userId
+      toUser: Number(toUser)
     };
 
     fetch('/api/messages', {

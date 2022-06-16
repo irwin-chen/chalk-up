@@ -10,7 +10,7 @@ const jwt = require('jsonwebtoken');
 
 const errorMiddleware = require('./error-middleware');
 const uploadsMiddleware = require('./uploads-middleware');
-const authorizationMiddleware = require('./authorization-middleware');
+const auth = require('./authorization-middleware');
 
 const app = express();
 const server = createServer(app);
@@ -100,14 +100,13 @@ app.post('/api/register', uploadsMiddleware, (req, res, next) => {
     .catch(err => next(err));
 });
 
-app.use(authorizationMiddleware);
-io.use((authorizationMiddleware, next) => {
-  next();
-});
+app.use(auth.authorizationMiddleware);
+io.use(auth.socketAuthorizationMiddleware);
 
 io.on('connection', socket => {
-  const { toUser, fromUser } = socket.handshake.query;
-  const roomId = [toUser, fromUser].sort().join('-');
+  const { userId } = socket.user;
+  const { toUser } = socket.handshake.query;
+  const roomId = [toUser, userId].sort().join('-');
   socket.join(roomId);
 });
 
@@ -167,8 +166,9 @@ app.get('/api/user/:userId', (req, res, next) => {
     .catch(err => next(err));
 });
 
-app.post('/api/chat', (req, res, next) => {
-  const { toUser, fromUser } = req.body;
+app.get('/api/chat', (req, res, next) => {
+  const { toUser } = req.query;
+  const { userId } = req.user;
   const sql = `
    select *
      from "chat"
@@ -176,7 +176,7 @@ app.post('/api/chat', (req, res, next) => {
        or ("recipientId" = $2 and "senderId" = $1)
     order by "createdAt" asc
   `;
-  const params = [toUser, fromUser];
+  const params = [toUser, userId];
   db.query(sql, params)
     .then(result => {
       res.json(result.rows);
@@ -185,9 +185,10 @@ app.post('/api/chat', (req, res, next) => {
 });
 
 app.post('/api/messages', (req, res, next) => {
-  const { fromUser, toUser, message } = req.body;
-  const roomId = [fromUser, toUser].sort().join('-');
-  const params = [fromUser, toUser, message];
+  const { toUser, message } = req.body;
+  const { userId } = req.user;
+  const roomId = [userId, toUser].sort().join('-');
+  const params = [userId, toUser, message];
   const sql = `
   insert into "chat" ("senderId", "recipientId", "messageContent")
        values ($1, $2, $3)
