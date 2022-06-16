@@ -12,8 +12,9 @@ export default class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      user: null,
       route: {
-        path: '#sign-in'
+        path: parseRoute(window.location.hash)
       }
     };
     this.signIn = this.signIn.bind(this);
@@ -27,13 +28,17 @@ export default class App extends React.Component {
 
   componentDidMount() {
     const token = window.localStorage.getItem('userToken');
-    let path = 'sign-in';
     if (token) {
-      path = '';
+      const user = jwtDecode(token);
+      this.setState({
+        user,
+        route: {
+          path: ''
+        }
+      });
+    } else {
+      window.location.hash = '#sign-in';
     }
-    this.setState({
-      route: { path }
-    });
 
     window.addEventListener('hashchange', () => {
       this.setState({
@@ -44,10 +49,10 @@ export default class App extends React.Component {
 
   renderPage() {
     const token = window.localStorage.getItem('userToken');
-    const { route } = this.state;
-    let user = null;
-    if (token) {
-      user = jwtDecode(token);
+    const { route, user } = this.state;
+
+    if (!user) {
+      return;
     }
 
     if (route.path === '') {
