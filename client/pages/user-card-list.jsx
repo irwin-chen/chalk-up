@@ -1,6 +1,7 @@
 import React from 'react';
 import UserCard from '../components/user-card';
 import Header from '../components/header';
+import AppContext from '../lib/app-context';
 
 export default class UserCardList extends React.Component {
 
@@ -12,13 +13,14 @@ export default class UserCardList extends React.Component {
   }
 
   componentDidMount() {
+    const { token, user } = this.context;
     fetch('/api/userList', {
       method: 'post',
       headers: {
         'Content-Type': 'application/json',
-        'x-access-token': this.props.token
+        'x-access-token': token
       },
-      body: JSON.stringify(this.props.user)
+      body: JSON.stringify(user)
     })
       .then(response => response.json())
       .then(data => {
@@ -39,10 +41,10 @@ export default class UserCardList extends React.Component {
   }
 
   render() {
-    if (!this.props.user) {
-      window.location.hash = '#sign-in';
-    }
-    if (!this.state.userList) return null;
+    const { user } = this.context;
+    const { userList } = this.state;
+    if (!user) window.location.hash = '#sign-in';
+    if (!userList) return null;
     return (
       <>
         <Header />
@@ -53,3 +55,5 @@ export default class UserCardList extends React.Component {
     );
   }
 }
+
+UserCardList.contextType = AppContext;

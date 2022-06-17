@@ -49,18 +49,17 @@ export default class App extends React.Component {
   }
 
   renderPage() {
-    const token = window.localStorage.getItem('userToken');
-    const { route, user } = this.state;
-    if (route.path === '') {
-      return <UserCardList token={token} user={user} />;
-    } else if (route.path === 'profile') {
+    const { path } = this.state.route;
+    if (path === '') {
+      return <UserCardList />;
+    } else if (path === 'profile') {
       return <Profile profileId={route.params.get('userId')} token={token} />;
-    } else if (route.path === 'chat') {
+    } else if (path === 'chat') {
       return <Chatroom toUser={route.params.get('userId')} token={token} fromUser={user} />;
-    } else if (route.path === 'messages') {
+    } else if (path === 'messages') {
       return <Messages />;
-    } else if (route.path === 'sign-in' || route.path === 'register') {
-      return <Register path={route.path} signIn={this.signIn} />;
+    } else if (path === 'sign-in' || path === 'register') {
+      return <Register path={path} signIn={this.signIn} />;
     } else {
       return <NoContent />;
     }
@@ -68,8 +67,8 @@ export default class App extends React.Component {
 
   render() {
     const { user, route } = this.state;
-
-    const contextValue = { user, route };
+    const token = (window.localStorage.getItem('userToken')) ? window.localStorage.getItem('userToken') : null;
+    const contextValue = { user, route, token };
     return (
       <AppContext.Provider value={contextValue}>
         <div className="body font-mono bg-slate-100 min-h-screen">
