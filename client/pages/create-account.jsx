@@ -1,5 +1,6 @@
 import React from 'react';
 import Header from '../components/header';
+import Redirect from '../components/redirect';
 
 export default class Register extends React.Component {
   constructor(props) {

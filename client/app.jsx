@@ -7,6 +7,7 @@ import Chatroom from './pages/chat-room';
 import Messages from './pages/messages';
 import Register from './pages/create-account';
 import jwtDecode from 'jwt-decode';
+import AppContext from './lib/app-context';
 
 export default class App extends React.Component {
   constructor(props) {
@@ -18,17 +19,15 @@ export default class App extends React.Component {
       }
     };
     this.signIn = this.signIn.bind(this);
-    console.log('constructor');
   }
 
   signIn(result) {
-    const { token } = result;
+    const { user, token } = result;
     window.localStorage.setItem('userToken', token);
-    window.location.hash = '#';
+    this.setState({ user, route: { path: '' } });
   }
 
   componentDidMount() {
-    console.log('componentDidMount');
     const token = window.localStorage.getItem('userToken');
     if (token) {
       const user = jwtDecode(token);
@@ -50,14 +49,8 @@ export default class App extends React.Component {
   }
 
   renderPage() {
-    console.log('renderPage');
     const token = window.localStorage.getItem('userToken');
     const { route, user } = this.state;
-
-    if (!user) {
-      return;
-    }
-
     if (route.path === '') {
       return <UserCardList token={token} user={user} />;
     } else if (route.path === 'profile') {
@@ -74,11 +67,15 @@ export default class App extends React.Component {
   }
 
   render() {
-    console.log('render');
+    const { user, route } = this.state;
+
+    const contextValue = { user, route };
     return (
-      <div className="body font-mono bg-slate-100 min-h-screen">
-        {this.renderPage()}
-      </div>
+      <AppContext.Provider value={contextValue}>
+        <div className="body font-mono bg-slate-100 min-h-screen">
+          {this.renderPage()}
+        </div>
+      </AppContext.Provider>
     );
   }
 }

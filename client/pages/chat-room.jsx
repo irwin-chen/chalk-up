@@ -113,10 +113,7 @@ export default class Chatroom extends React.Component {
   }
 
   render() {
-    const { toUser, token } = this.props;
-    if (!token) {
-      window.location.hash = '#sign-in';
-    }
+    const { toUser } = this.props;
     return (
       <>
         <Header targetId={toUser} token={this.props.token} />
