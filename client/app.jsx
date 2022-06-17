@@ -18,6 +18,7 @@ export default class App extends React.Component {
       }
     };
     this.signIn = this.signIn.bind(this);
+    console.log('constructor');
   }
 
   signIn(result) {
@@ -27,6 +28,7 @@ export default class App extends React.Component {
   }
 
   componentDidMount() {
+    console.log('componentDidMount');
     const token = window.localStorage.getItem('userToken');
     if (token) {
       const user = jwtDecode(token);
@@ -48,6 +50,7 @@ export default class App extends React.Component {
   }
 
   renderPage() {
+    console.log('renderPage');
     const token = window.localStorage.getItem('userToken');
     const { route, user } = this.state;
 
@@ -71,6 +74,7 @@ export default class App extends React.Component {
   }
 
   render() {
+    console.log('render');
     return (
       <div className="body font-mono bg-slate-100 min-h-screen">
         {this.renderPage()}
