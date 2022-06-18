@@ -32,7 +32,7 @@ export default class Header extends React.Component {
     if (this.state.targetProfile) {
       return (
         <>
-          <a className="text-white ml-4" href="#messages">
+          <a className="text-white ml-4" href="#">
             <FontAwesomeIcon icon={faChevronLeft} inverse/>
           </a>
           <a href={`#profile?userId=${targetProfile.userId}`} className="avatar ml-4">
