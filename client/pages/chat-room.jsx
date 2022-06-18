@@ -1,6 +1,7 @@
 import React from 'react';
 import Header from '../components/header';
 import { io } from 'socket.io-client';
+import AppContext from '../lib/app-context';
 
 export default class Chatroom extends React.Component {
 
@@ -15,8 +16,8 @@ export default class Chatroom extends React.Component {
   }
 
   componentDidMount() {
-    const { toUser, token } = this.props;
-
+    const { route, token } = this.context;
+    const toUser = route.params.get('userId');
     const socket = io('/', {
       query: {
         toUser: Number(toUser)
@@ -51,14 +52,14 @@ export default class Chatroom extends React.Component {
     if (!this.state.chat) {
       return null;
     }
-    const { fromUser } = this.props;
+    const { user } = this.context;
     const { chat } = this.state;
     const messageList = chat.map(entry => {
       const time = new Date(entry.createdAt);
       const hourMin = new Intl.DateTimeFormat('en-us', { timeStyle: 'short' }).format(time);
       const date = new Intl.DateTimeFormat('en-us', { dateStyle: 'short' }).format(time);
       let order, messageClass, border, timeLabel;
-      if (entry.senderId === fromUser.userId) {
+      if (entry.senderId === user.userId) {
         messageClass = 'justify-end pr-4';
         order = '';
         border = 'rounded-bl-lg';
@@ -91,7 +92,8 @@ export default class Chatroom extends React.Component {
   sendMessage(event) {
     event.preventDefault();
 
-    const { toUser, token } = this.props;
+    const { route, token } = this.context;
+    const toUser = route.params.get('userId');
     const message = {
       message: this.state.message,
       toUser: Number(toUser)
@@ -113,10 +115,11 @@ export default class Chatroom extends React.Component {
   }
 
   render() {
-    const { toUser } = this.props;
+    const { token, route } = this.context;
+    const toUser = route.params.get('userId');
     return (
       <>
-        <Header targetId={toUser} token={this.props.token} />
+        <Header targetId={toUser} token={token} />
         <div className="w-9/10 h-[80vh] mx-auto sm:max-w-lg mb-8 overflow-auto">
           {this.displayMessage()}
         </div>
@@ -127,3 +130,5 @@ export default class Chatroom extends React.Component {
     );
   }
 }
+
+Chatroom.contextType = AppContext;

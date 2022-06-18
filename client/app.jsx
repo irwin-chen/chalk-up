@@ -4,7 +4,6 @@ import Profile from './pages/profile';
 import NoContent from './pages/no-content';
 import parseRoute from './lib/parse-route';
 import Chatroom from './pages/chat-room';
-import Messages from './pages/messages';
 import Register from './pages/create-account';
 import jwtDecode from 'jwt-decode';
 import AppContext from './lib/app-context';
@@ -50,14 +49,13 @@ export default class App extends React.Component {
 
   renderPage() {
     const { path } = this.state.route;
+
     if (path === '') {
       return <UserCardList />;
     } else if (path === 'profile') {
-      return <Profile profileId={route.params.get('userId')} token={token} />;
+      return <Profile />;
     } else if (path === 'chat') {
-      return <Chatroom toUser={route.params.get('userId')} token={token} fromUser={user} />;
-    } else if (path === 'messages') {
-      return <Messages />;
+      return <Chatroom />;
     } else if (path === 'sign-in' || path === 'register') {
       return <Register path={path} signIn={this.signIn} />;
     } else {

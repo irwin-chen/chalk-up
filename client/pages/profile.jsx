@@ -1,6 +1,7 @@
 import React from 'react';
 import ProfileTags from '../components/profile-tags';
 import Header from '../components/header';
+import AppContext from '../lib/app-context';
 
 export default class Profile extends React.Component {
 
@@ -12,9 +13,11 @@ export default class Profile extends React.Component {
   }
 
   componentDidMount() {
-    fetch(`api/user/${this.props.profileId}`, {
+    const { route, token } = this.context;
+    const userId = route.params.get('userId');
+    fetch(`api/user/${userId}`, {
       headers: {
-        'x-access-token': this.props.token
+        'x-access-token': token
       }
     })
       .then(response => response.json())
@@ -61,3 +64,5 @@ export default class Profile extends React.Component {
     );
   }
 }
+
+Profile.contextType = AppContext;
