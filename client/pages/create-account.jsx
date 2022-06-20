@@ -1,5 +1,6 @@
 import React from 'react';
 import Header from '../components/header';
+import AppContext from '../lib/app-context';
 
 export default class Register extends React.Component {
   constructor(props) {
@@ -58,7 +59,9 @@ export default class Register extends React.Component {
       })
         .then(res => res.json())
         .then(result => {
-          this.props.signIn(result);
+          if (result.matching) {
+            this.props.signIn(result);
+          }
         });
     }
   }
@@ -94,7 +97,13 @@ export default class Register extends React.Component {
       .then(() => {
         this.setState({
           username: '',
-          password: ''
+          password: '',
+          firstName: '',
+          lastName: '',
+          age: '',
+          city: '',
+          preview: './images/image-empty.jpeg',
+          userDescription: ''
         }, () => {
           window.location.hash = '#sign-in';
         });
@@ -228,3 +237,5 @@ export default class Register extends React.Component {
     );
   }
 }
+
+Register.contextType = AppContext;

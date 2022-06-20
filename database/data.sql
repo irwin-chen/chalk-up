@@ -6,12 +6,11 @@ insert into "tags" ("label")
             ('outdoor'),
             ('belaying');
 
-insert into "user" ("userName","userDescription", "imageUrl")
-     values ('Nana and Popo', 'ice climbers', 'image-iceclimbers.webp'),
-            ('Geodude', 'Geodude is a brownish-gray boulder Pokémon. It has bulging, rocky eyebrows, trapezoidal, brown eyes, and a wide mouth. Its arms are muscular with five-fingered hands. Geodude uses its arms to climb steadily up steep mountain paths. Geodude used rockclimb! It was super effective!', 'image-geodude.jpeg'),
-            ('Fish', 'hmmm', 'image-fish.jpeg'),
-            ('Cat', 'YAMERO', 'image-cat.jpeg'),
-            ('User', 'This is for testing purposes', 'image-dummy-user.jpeg');
+insert into "user" ("userDescription", "imageUrl", "age", "city", "firstName", "lastName")
+     values ('looking for people to climb with!', 'image-1655702494410.jpeg', '25', 'Albaquerque', 'Julian', 'King'),
+            ('Avid rock climber, looking for a belayer!', 'image-1655702756574.jpeg', '22', 'Culver City', 'Jason', 'Hwang'),
+            ('New to climbing, looking for an indoor climbing partner!', 'image-1655702968063.jpeg', '29', 'Irvine', 'Jeremy', 'Fisher'),
+            ('Looking for other people to climb with!', 'image-1655749201506.jpg', '26', 'Irvine', 'Irwin', 'Chen');
 
 insert into "skillLevels" ("label")
      values ('beginner'),
@@ -20,10 +19,11 @@ insert into "skillLevels" ("label")
 
 insert into "userTags" ("userId", "tagId")
      values ('1','1'),
-            ('1','2'),
+            ('1','3'),
+            ('1','5'),
             ('2','1'),
             ('2','3'),
-            ('3','2'),
+            ('3','5'),
+            ('3','6'),
             ('4','2'),
-            ('4','3'),
-            ('5','2');
+            ('4','4');

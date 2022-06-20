@@ -49,13 +49,13 @@ app.post('/api/signin', (req, res, next) => {
       const { userId, hashedPassword } = user;
       argon2
         .verify(hashedPassword, password)
-        .then(result => {
-          if (!result) {
+        .then(matching => {
+          if (!matching) {
             throw new ClientError(401, 'invalid password');
           }
           const payload = { userId, username };
           const token = jwt.sign(payload, process.env.TOKEN_SECRET);
-          res.status(200).json({ token, user: payload });
+          res.status(200).json({ token, user: payload, matching });
         })
         .catch(err => next(err));
     })
@@ -115,7 +115,7 @@ app.post('/api/userList', (req, res, next) => {
   const params = [userId];
   const sql = `
   select "u"."userId",
-         "u"."userName",
+         "u"."firstName",
          "u"."imageUrl",
          "u"."userDescription",
          "t"."tags"
@@ -142,7 +142,7 @@ app.get('/api/user/:userId', (req, res, next) => {
   const params = [Number(req.params.userId)];
   const sql = `
   select "u"."userId",
-         "u"."userName",
+         "u"."firstName",
          "u"."imageUrl",
          "u"."userDescription",
          "t"."tags"

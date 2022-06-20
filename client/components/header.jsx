@@ -32,7 +32,7 @@ export default class Header extends React.Component {
     if (this.state.targetProfile) {
       return (
         <>
-          <a className="text-white ml-4" href="#messages">
+          <a className="text-white ml-4" href="#">
             <FontAwesomeIcon icon={faChevronLeft} inverse/>
           </a>
           <a href={`#profile?userId=${targetProfile.userId}`} className="avatar ml-4">
@@ -40,13 +40,13 @@ export default class Header extends React.Component {
               <img src={`./images/${targetProfile.imageUrl}`} />
             </div>
           </a>
-          <a href={`#profile?userId=${targetProfile.userId}`} className="text-white ml-4 text-xl" >{targetProfile.userName}</a>
+          <a href={`#profile?userId=${targetProfile.userId}`} className="text-white ml-4 text-xl" >{targetProfile.firstName}</a>
         </>
       );
     } else {
       return (
         <div className="w-9/10 mx-auto">
-          <a className="text-white text-2xl hover:cursor-pointer" href='#'>Climber</a>
+          <p className="text-white text-2xl"> Climber</p>
         </div>
       );
     }

@@ -9,7 +9,7 @@ create schema "public";
 CREATE TABLE "public"."user" (
 	"userId" serial NOT NULL,
 	"hashedPassword" TEXT,
-	"userName" TEXT NOT NULL,
+	"userName" TEXT,
 	"userDescription" TEXT NOT NULL,
 	"imageUrl" TEXT NOT NULL,
 	"latitude" float8,
