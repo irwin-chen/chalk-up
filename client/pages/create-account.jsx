@@ -1,6 +1,5 @@
 import React from 'react';
 import Header from '../components/header';
-import Redirect from '../components/redirect';
 import AppContext from '../lib/app-context';
 
 export default class Register extends React.Component {
