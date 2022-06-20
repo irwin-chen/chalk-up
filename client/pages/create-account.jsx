@@ -59,7 +59,9 @@ export default class Register extends React.Component {
       })
         .then(res => res.json())
         .then(result => {
-          this.props.signIn(result);
+          if (result.matching) {
+            this.props.signIn(result);
+          }
         });
     }
   }

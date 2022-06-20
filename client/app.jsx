@@ -14,7 +14,7 @@ export default class App extends React.Component {
     this.state = {
       user: null,
       route: {
-        path: parseRoute(window.location.hash)
+        path: parseRoute('#sign-in')
       }
     };
     this.signIn = this.signIn.bind(this);
@@ -22,6 +22,9 @@ export default class App extends React.Component {
 
   signIn(result) {
     const { user, token } = result;
+    if (!token) {
+      window.location.hash = '#sign-in';
+    }
     window.localStorage.setItem('userToken', token);
     this.setState({ user, route: { path: '' } });
   }
@@ -47,20 +50,22 @@ export default class App extends React.Component {
     });
   }
 
-  renderPage() {
+  renderPage(token) {
     const { path } = this.state.route;
 
     if (path === '') {
       return <UserCardList />;
-    } else if (path === 'profile') {
-      return <Profile />;
-    } else if (path === 'chat') {
-      return <Chatroom />;
-    } else if (path === 'sign-in' || path === 'register') {
-      return <Register path={path} signIn={this.signIn} />;
-    } else {
-      return <NoContent />;
     }
+    if (path === 'profile') {
+      return <Profile />;
+    }
+    if (path === 'chat') {
+      return <Chatroom />;
+    }
+    if (path === 'sign-in' || path === 'register') {
+      return <Register path={path} signIn={this.signIn} />;
+    }
+    return <NoContent />;
   }
 
   render() {
@@ -70,7 +75,7 @@ export default class App extends React.Component {
     return (
       <AppContext.Provider value={contextValue}>
         <div className="body font-mono bg-slate-100 min-h-screen">
-          {this.renderPage()}
+          {this.renderPage(token)}
         </div>
       </AppContext.Provider>
     );
