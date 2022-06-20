@@ -40,7 +40,7 @@ export default class Header extends React.Component {
               <img src={`./images/${targetProfile.imageUrl}`} />
             </div>
           </a>
-          <a href={`#profile?userId=${targetProfile.userId}`} className="text-white ml-4 text-xl" >{targetProfile.userName}</a>
+          <a href={`#profile?userId=${targetProfile.userId}`} className="text-white ml-4 text-xl" >{targetProfile.firstName}</a>
         </>
       );
     } else {

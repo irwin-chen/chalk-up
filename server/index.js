@@ -115,7 +115,7 @@ app.post('/api/userList', (req, res, next) => {
   const params = [userId];
   const sql = `
   select "u"."userId",
-         "u"."userName",
+         "u"."firstName",
          "u"."imageUrl",
          "u"."userDescription",
          "t"."tags"
@@ -142,7 +142,7 @@ app.get('/api/user/:userId', (req, res, next) => {
   const params = [Number(req.params.userId)];
   const sql = `
   select "u"."userId",
-         "u"."userName",
+         "u"."firstName",
          "u"."imageUrl",
          "u"."userDescription",
          "t"."tags"

@@ -51,7 +51,7 @@ export default class Profile extends React.Component {
             <img className="aspect-[10/11] object-cover w-full shadow-md rounded-lg" src={`./images/${userProfile.imageUrl}`}></img>
           </div>
           <div className="profile-description w-19/20 bg-white shadow-md rounded-lg mb-2">
-            <p className="text-3xl font-bold p-2">{userProfile.userName}</p>
+            <p className="text-3xl font-bold p-2">{userProfile.firstName}</p>
             <p className="p-2">{userProfile.userDescription}</p>
           </div>
           <div className="profile-tags w-19/20 bg-white shadow-md rounded-lg p-2 mb-2">

@@ -95,7 +95,13 @@ export default class Register extends React.Component {
       .then(() => {
         this.setState({
           username: '',
-          password: ''
+          password: '',
+          firstName: '',
+          lastName: '',
+          age: '',
+          city: '',
+          preview: './images/image-empty.jpeg',
+          userDescription: ''
         }, () => {
           window.location.hash = '#sign-in';
         });
