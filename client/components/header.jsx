@@ -46,7 +46,7 @@ export default class Header extends React.Component {
     } else {
       return (
         <div className="w-9/10 mx-auto">
-          <p className="text-white text-2xl"> Climber</p>
+          <a className="text-white text-2xl" href="#"> Climber</a>
         </div>
       );
     }

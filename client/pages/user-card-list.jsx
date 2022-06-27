@@ -14,6 +14,7 @@ export default class UserCardList extends React.Component {
 
   componentDidMount() {
     const { token, user } = this.context;
+    if (!token) return;
     fetch('/api/userList', {
       method: 'post',
       headers: {
