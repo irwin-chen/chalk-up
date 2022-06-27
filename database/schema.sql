@@ -11,7 +11,7 @@ CREATE TABLE "public"."user" (
 	"hashedPassword" TEXT,
 	"userName" TEXT,
 	"userDescription" TEXT NOT NULL,
-	"imageUrl" TEXT NOT NULL,
+	"imageUrl" TEXT,
 	"latitude" float8,
 	"longitude" float8,
 	"skillLevelId" int,

@@ -14,7 +14,7 @@ export default class App extends React.Component {
     this.state = {
       user: null,
       route: {
-        path: parseRoute('#sign-in')
+        path: 'sign-in'
       }
     };
     this.signIn = this.signIn.bind(this);
@@ -65,6 +65,7 @@ export default class App extends React.Component {
     if (path === 'sign-in' || path === 'register') {
       return <Register path={path} signIn={this.signIn} />;
     }
+
     return <NoContent />;
   }
 

@@ -88,7 +88,7 @@ export default class Register extends React.Component {
         form.append('tagsId', i);
       }
     }
-    form.append('image', this.fileInputRef.current.files[0]);
+    form.append('profile-image', this.fileInputRef.current.files[0]);
 
     fetch('/api/register', {
       method: 'POST',
@@ -180,7 +180,7 @@ export default class Register extends React.Component {
                 <label>
                   <p className="text-sm text-center mb-2">click below upload a profile picture</p>
                   <input required onChange={this.imageUploaded} ref={this.fileInputRef} className="hidden" type="file" accept=".png, .jpg, .jpeg, .gif, .webp"></input>
-                  <img className="object-cover aspect-[5/6] w-full" name="image" src={this.state.preview}></img>
+                  <img className="object-cover aspect-[5/6] w-full" src={this.state.preview}></img>
                 </label>
               </div>
             </div>
