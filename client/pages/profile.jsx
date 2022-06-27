@@ -48,7 +48,7 @@ export default class Profile extends React.Component {
         <Header />
         <div className="flex flex-col items-center max-w-xl mx-auto">
           <div className="w-19/20 mb-2">
-            <img className="aspect-[10/11] object-cover w-full shadow-md rounded-lg" src={`./images/${userProfile.imageUrl}`}></img>
+            <img className="aspect-[10/11] object-cover w-full shadow-md rounded-lg" src={userProfile.imageUrl}></img>
           </div>
           <div className="profile-description w-19/20 bg-white shadow-md rounded-lg mb-2">
             <p className="text-3xl font-bold p-2">{userProfile.firstName}</p>

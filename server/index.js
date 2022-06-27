@@ -70,7 +70,7 @@ app.post('/api/register', uploadsMiddleware, (req, res, next) => {
   argon2
     .hash(password)
     .then(hashed => {
-      const url = `${req.file.filename}`;
+      const url = req.file.location;
       let params = [username, hashed, userDescription, firstName, lastName, age, city, url];
       let sql = `
         insert into "user" ("userName", "hashedPassword", "userDescription", "firstName", "lastName", "age", "city", "imageUrl")
