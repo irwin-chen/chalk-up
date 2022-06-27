@@ -37,7 +37,7 @@ export default class Header extends React.Component {
           </a>
           <a href={`#profile?userId=${targetProfile.userId}`} className="avatar ml-4">
             <div className="w-12 rounded-full bg-white">
-              <img src={`./images/${targetProfile.imageUrl}`} />
+              <img src={targetProfile.imageUrl} />
             </div>
           </a>
           <a href={`#profile?userId=${targetProfile.userId}`} className="text-white ml-4 text-xl" >{targetProfile.firstName}</a>

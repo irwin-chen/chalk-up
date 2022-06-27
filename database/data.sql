@@ -7,10 +7,10 @@ insert into "tags" ("label")
             ('belaying');
 
 insert into "user" ("userDescription", "imageUrl", "age", "city", "firstName", "lastName")
-     values ('looking for people to climb with!', 'image-1655702494410.jpeg', '25', 'Albaquerque', 'Julian', 'King'),
-            ('Avid rock climber, looking for a belayer!', 'image-1655702756574.jpeg', '22', 'Culver City', 'Jason', 'Hwang'),
-            ('New to climbing, looking for an indoor climbing partner!', 'image-1655702968063.jpeg', '29', 'Irvine', 'Jeremy', 'Fisher'),
-            ('Looking for other people to climb with!', 'image-1655749201506.jpg', '26', 'Irvine', 'Irwin', 'Chen');
+     values ('looking for people to climb with!', 'https://climberfinder.s3.us-east-1.amazonaws.com/1656362455390.jpg', '25', 'Albaquerque', 'Julian', 'King'),
+            ('Avid rock climber, looking for a belayer!', 'https://climberfinder.s3.us-east-1.amazonaws.com/1656362556942.jpeg', '22', 'Culver City', 'Jason', 'Hwang'),
+            ('New to climbing, looking for an indoor climbing partner!', 'https://climberfinder.s3.us-east-1.amazonaws.com/1656362647814.jpeg', '29', 'Irvine', 'Jeremy', 'Fisher'),
+            ('Looking for other people to climb with!', 'https://climberfinder.s3.us-east-1.amazonaws.com/1656363388444.jpg', '26', 'Irvine', 'Irwin', 'Chen');
 
 insert into "skillLevels" ("label")
      values ('beginner'),
