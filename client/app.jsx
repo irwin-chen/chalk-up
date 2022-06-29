@@ -13,11 +13,18 @@ export default class App extends React.Component {
     super(props);
     this.state = {
       user: null,
+      loading: false,
       route: {
         path: 'sign-in'
       }
     };
     this.signIn = this.signIn.bind(this);
+    this.toggleLoading = this.toggleLoading.bind(this);
+  }
+
+  toggleLoading() {
+    const loading = !this.state.loading;
+    this.setState({ loading });
   }
 
   signIn(result) {
@@ -70,11 +77,21 @@ export default class App extends React.Component {
   }
 
   render() {
-    const { user, route } = this.state;
+    const { user, route, loading } = this.state;
+    const toggleLoading = this.toggleLoading;
     const token = (window.localStorage.getItem('userToken')) ? window.localStorage.getItem('userToken') : null;
-    const contextValue = { user, route, token };
+    const contextValue = { user, route, token, toggleLoading };
+
+    let hidden;
+    loading ? hidden = '' : hidden = 'hidden';
     return (
       <AppContext.Provider value={contextValue}>
+        <div className={`relative z-10 ${hidden}`}>
+          <div className="fixed inset-0 bg-gray-300 bg-opacity-75 transition-opacity"></div>
+          <div className="fixed z-10 inset-0 overflow-y-auto flex justify-center items-center">
+            <img className="w-40 h-40" src="/images/spinner.svg" />
+          </div>
+        </div>
         <div className="body font-mono bg-slate-100 min-h-screen">
           {this.renderPage(token)}
         </div>

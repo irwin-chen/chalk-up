@@ -50,6 +50,7 @@ export default class Register extends React.Component {
 
     const loginInfo = { username, password };
     if (this.props.path === 'sign-in') {
+      this.context.toggleLoading();
       fetch('/api/signin', {
         method: 'POST',
         headers: {
@@ -59,6 +60,7 @@ export default class Register extends React.Component {
       })
         .then(res => res.json())
         .then(result => {
+          this.context.toggleLoading();
           if (result.matching) {
             this.props.signIn(result);
           }
@@ -75,6 +77,7 @@ export default class Register extends React.Component {
 
   accountSubmit(event) {
     event.preventDefault();
+    this.context.toggleLoading();
     const { username, password, firstName, lastName, age, city, userDescription } = this.state;
     const accountInfo = { username, password, firstName, lastName, age, city, userDescription };
 
@@ -105,6 +108,7 @@ export default class Register extends React.Component {
           preview: './images/image-empty.jpeg',
           userDescription: ''
         }, () => {
+          this.context.toggleLoading();
           window.location.hash = '#sign-in';
         });
       });

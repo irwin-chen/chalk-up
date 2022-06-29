@@ -14,6 +14,7 @@ export default class UserCardList extends React.Component {
 
   componentDidMount() {
     const { token, user } = this.context;
+    this.context.toggleLoading();
     if (!token) return;
     fetch('/api/userList', {
       method: 'post',
@@ -25,6 +26,7 @@ export default class UserCardList extends React.Component {
     })
       .then(response => response.json())
       .then(data => {
+        this.context.toggleLoading();
         const list = data;
         this.setState({
           userList: list

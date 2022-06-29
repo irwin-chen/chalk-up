@@ -14,6 +14,7 @@ export default class Profile extends React.Component {
 
   componentDidMount() {
     const { route, token } = this.context;
+    this.context.toggleLoading();
     const userId = route.params.get('userId');
     fetch(`api/user/${userId}`, {
       headers: {
@@ -22,6 +23,7 @@ export default class Profile extends React.Component {
     })
       .then(response => response.json())
       .then(data => {
+        this.context.toggleLoading();
         const entry = data;
         this.setState({
           userProfile: entry
@@ -58,7 +60,7 @@ export default class Profile extends React.Component {
             <p className="text-xl font-bold">Tags</p>
             {profileTags}
           </div>
-          <a className="btn btn-wide" href={`#chat?userId=${userProfile.userId}`}>Start Chat</a>
+          <a className="btn btn-wide mb-8" href={`#chat?userId=${userProfile.userId}`}>Start Chat</a>
         </div>
       </>
     );
