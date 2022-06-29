@@ -1,6 +1,7 @@
 import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronLeft } from '@fortawesome/free-solid-svg-icons';
+import AppContext from '../lib/app-context';
 
 export default class Header extends React.Component {
   constructor(props) {
@@ -12,7 +13,6 @@ export default class Header extends React.Component {
   }
 
   componentDidMount() {
-    if (!Number(this.props.targetId)) return null;
     fetch(`api/user/${this.props.targetId}`, {
       headers: {
         'x-access-token': this.props.token
@@ -29,6 +29,7 @@ export default class Header extends React.Component {
 
   renderHeader() {
     const { targetProfile } = this.state;
+    const { path } = this.context.route;
     if (this.state.targetProfile) {
       return (
         <>
@@ -42,6 +43,12 @@ export default class Header extends React.Component {
           </a>
           <a href={`#profile?userId=${targetProfile.userId}`} className="text-white ml-4 text-xl" >{targetProfile.firstName}</a>
         </>
+      );
+    } else if (path === 'sign-in') {
+      return (
+        <div className="w-9/10 mx-auto">
+          <p className="text-white text-2xl">Chalk Up</p>
+        </div>
       );
     } else {
       return (
@@ -60,3 +67,5 @@ export default class Header extends React.Component {
     );
   }
 }
+
+Header.contextType = AppContext;
