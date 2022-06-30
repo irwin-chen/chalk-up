@@ -31,7 +31,7 @@ export default class Header extends React.Component {
 
   renderHeader() {
     const { targetProfile } = this.state;
-    const { route, token } = this.context;
+    const { token } = this.context;
     if (this.state.targetProfile && token) {
       return (
         <>
@@ -46,7 +46,7 @@ export default class Header extends React.Component {
           <a href={`#profile?userId=${targetProfile.userId}`} className="text-white ml-4 text-xl" >{targetProfile.firstName}</a>
         </>
       );
-    } else if (route.path === 'sign-in' || route.path === 'register') {
+    } else if (!token) {
       return (
         <div className="w-9/10 mx-auto">
           <p className="text-white text-2xl">Chalk Up</p>
