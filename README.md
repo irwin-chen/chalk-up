@@ -2,7 +2,7 @@
 
 A web application for rock climbers who want to find others to climb with
 
-When I first started out rock climbing, one of the hardest things was finding other people to rock climb with. This was especially applicable for top-roping and lead climbing, where another person is needed in order to climb. I remember having to reach out through facebook communities and instagram in order to potentially find people to climb with. I felt like it would be a nice quality of life change to create an app for like-minded rock climbers to be able to meet others without having to comb through multiple messaging platforms.
+When I first started out rock climbing, one of the hardest things was finding other people to rock climb with. This was especially applicable for top-roping and lead climbing, where another person is needed in order to climb. I remember having to reach out through facebook communities and instagram in order to potentially find people to climb with. I felt like it would be a nice quality of life change to create an app for like-minded rock climbers to meet each other without having to comb through multiple social media platforms.
 
 [Link to deployment](https://chalk-up-app.herokuapp.com/)
 
