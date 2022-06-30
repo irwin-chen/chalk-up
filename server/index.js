@@ -44,14 +44,14 @@ app.post('/api/signin', (req, res, next) => {
     .then(result => {
       const [user] = result.rows;
       if (!user) {
-        throw new ClientError(401, 'invalid username');
+        throw new ClientError(401, 'Invalid username. Please try again.');
       }
       const { userId, hashedPassword } = user;
       argon2
         .verify(hashedPassword, password)
         .then(matching => {
           if (!matching) {
-            throw new ClientError(401, 'invalid password');
+            throw new ClientError(401, 'Invalid password. Please try again.');
           }
           const payload = { userId, username };
           const token = jwt.sign(payload, process.env.TOKEN_SECRET);
@@ -64,9 +64,6 @@ app.post('/api/signin', (req, res, next) => {
 
 app.post('/api/register', uploadsMiddleware, (req, res, next) => {
   const { username, password, firstName, lastName, age, city, userDescription } = req.body;
-  if (!username || !password) {
-    throw new ClientError(400, 'Username and password required');
-  }
   argon2
     .hash(password)
     .then(hashed => {

@@ -1,6 +1,7 @@
 import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronLeft } from '@fortawesome/free-solid-svg-icons';
+import AppContext from '../lib/app-context';
 
 export default class Header extends React.Component {
   constructor(props) {
@@ -12,7 +13,8 @@ export default class Header extends React.Component {
   }
 
   componentDidMount() {
-    if (!Number(this.props.targetId)) return null;
+    const { targetId } = this.props;
+    if (!targetId) return null;
     fetch(`api/user/${this.props.targetId}`, {
       headers: {
         'x-access-token': this.props.token
@@ -29,7 +31,8 @@ export default class Header extends React.Component {
 
   renderHeader() {
     const { targetProfile } = this.state;
-    if (this.state.targetProfile) {
+    const { token } = this.context;
+    if (this.state.targetProfile && token) {
       return (
         <>
           <a className="text-white ml-4" href="#">
@@ -43,10 +46,16 @@ export default class Header extends React.Component {
           <a href={`#profile?userId=${targetProfile.userId}`} className="text-white ml-4 text-xl" >{targetProfile.firstName}</a>
         </>
       );
+    } else if (!token) {
+      return (
+        <div className="w-9/10 mx-auto">
+          <p className="text-white text-2xl">Chalk Up</p>
+        </div>
+      );
     } else {
       return (
         <div className="w-9/10 mx-auto">
-          <a className="text-white text-2xl" href="#"> Climber</a>
+          <a className="text-white text-2xl" href="#">Chalk Up</a>
         </div>
       );
     }
@@ -60,3 +69,5 @@ export default class Header extends React.Component {
     );
   }
 }
+
+Header.contextType = AppContext;

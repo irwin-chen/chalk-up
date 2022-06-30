@@ -1,6 +1,7 @@
 import React from 'react';
 import Header from '../components/header';
 import AppContext from '../lib/app-context';
+import Banner from '../components/banner';
 
 export default class Register extends React.Component {
   constructor(props) {
@@ -20,7 +21,9 @@ export default class Register extends React.Component {
       4: false,
       5: false,
       6: false,
-      nextForm: false
+      nextForm: false,
+      errorMessage: false,
+      errorText: ''
     };
     this.fileInputRef = React.createRef();
     this.handleChange = this.handleChange.bind(this);
@@ -29,6 +32,7 @@ export default class Register extends React.Component {
     this.imageUploaded = this.imageUploaded.bind(this);
     this.accountSubmit = this.accountSubmit.bind(this);
     this.onToggle = this.onToggle.bind(this);
+    this.preSeed = this.preSeed.bind(this);
   }
 
   handleChange(event) {
@@ -50,6 +54,7 @@ export default class Register extends React.Component {
 
     const loginInfo = { username, password };
     if (this.props.path === 'sign-in') {
+      this.context.toggleLoading();
       fetch('/api/signin', {
         method: 'POST',
         headers: {
@@ -59,8 +64,11 @@ export default class Register extends React.Component {
       })
         .then(res => res.json())
         .then(result => {
+          this.context.toggleLoading();
           if (result.matching) {
             this.props.signIn(result);
+          } else {
+            this.setState({ errorMessage: true, errorText: result.error });
           }
         });
     }
@@ -75,6 +83,7 @@ export default class Register extends React.Component {
 
   accountSubmit(event) {
     event.preventDefault();
+    this.context.toggleLoading();
     const { username, password, firstName, lastName, age, city, userDescription } = this.state;
     const accountInfo = { username, password, firstName, lastName, age, city, userDescription };
 
@@ -105,6 +114,7 @@ export default class Register extends React.Component {
           preview: './images/image-empty.jpeg',
           userDescription: ''
         }, () => {
+          this.context.toggleLoading();
           window.location.hash = '#sign-in';
         });
       });
@@ -224,6 +234,17 @@ export default class Register extends React.Component {
     );
   }
 
+  preSeed(event) {
+    if (event.target.value === '1') {
+      this.setState({ username: 'tester', password: 'tester' }, () => {
+      });
+    }
+    if (event.target.value === '2') {
+      this.setState({ username: 'tester2', password: 'tester2' }, () => {
+      });
+    }
+  }
+
   componentWillUnmount() {
     URL.revokeObjectURL(this.state.preview);
   }
@@ -232,7 +253,12 @@ export default class Register extends React.Component {
     return (
       <>
         <Header />
+        <Banner errorText={this.state.errorText} />
         {this.createAccount()}
+        <div className="w-[95%] max-w-md py-6 mt-8 mx-auto rounded-lg flex justify-between">
+          <button onClick={this.preSeed} className="border border-black rounded-md px-3 py-1 text-md text-white bg-black" value={1}>Trial User 1</button>
+          <button onClick={this.preSeed} className="border border-black rounded-md px-3 py-1 text-md text-white bg-black" value={2}>Trial User 2</button>
+        </div>
       </>
     );
   }
