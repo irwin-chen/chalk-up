@@ -21,7 +21,8 @@ export default class Register extends React.Component {
       5: false,
       6: false,
       nextForm: false,
-      errorMessage: false
+      errorMessage: false,
+      errorText: ''
     };
     this.fileInputRef = React.createRef();
     this.handleChange = this.handleChange.bind(this);
@@ -65,7 +66,7 @@ export default class Register extends React.Component {
           if (result.matching) {
             this.props.signIn(result);
           } else {
-            this.setState({ errorMessage: true });
+            this.setState({ errorMessage: true, errorText: result.error });
           }
         });
     }
@@ -232,13 +233,13 @@ export default class Register extends React.Component {
   }
 
   errorBanner() {
-    const { errorMessage } = this.state;
+    const { errorMessage, errorText } = this.state;
     if (errorMessage) {
       return (
         <div className="alert w-[90%] mx-auto alert-error shadow-lg">
           <div>
             <svg xmlns="http://www.w3.org/2000/svg" className="stroke-current flex-shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-            <span>Invalid username or password.</span>
+            <span>{errorText}</span>
           </div>
         </div>
       );

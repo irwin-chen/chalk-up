@@ -13,6 +13,8 @@ export default class Header extends React.Component {
   }
 
   componentDidMount() {
+    const { targetId } = this.props;
+    if (!targetId) return null;
     fetch(`api/user/${this.props.targetId}`, {
       headers: {
         'x-access-token': this.props.token
@@ -29,8 +31,8 @@ export default class Header extends React.Component {
 
   renderHeader() {
     const { targetProfile } = this.state;
-    const { path } = this.context.route;
-    if (this.state.targetProfile) {
+    const { route, token } = this.context;
+    if (this.state.targetProfile && token) {
       return (
         <>
           <a className="text-white ml-4" href="#">
@@ -44,7 +46,7 @@ export default class Header extends React.Component {
           <a href={`#profile?userId=${targetProfile.userId}`} className="text-white ml-4 text-xl" >{targetProfile.firstName}</a>
         </>
       );
-    } else if (path === 'sign-in') {
+    } else if (route.path === 'sign-in') {
       return (
         <div className="w-9/10 mx-auto">
           <p className="text-white text-2xl">Chalk Up</p>
