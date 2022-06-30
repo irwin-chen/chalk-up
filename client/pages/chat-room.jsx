@@ -1,6 +1,7 @@
 import React from 'react';
 import Header from '../components/header';
 import { io } from 'socket.io-client';
+import Banner from '../components/banner';
 import AppContext from '../lib/app-context';
 
 export default class Chatroom extends React.Component {
@@ -9,7 +10,8 @@ export default class Chatroom extends React.Component {
     super(props);
     this.state = {
       message: '',
-      chat: null
+      chat: null,
+      errorText: ''
     };
     this.sendMessage = this.sendMessage.bind(this);
     this.typeMessage = this.typeMessage.bind(this);
@@ -34,9 +36,11 @@ export default class Chatroom extends React.Component {
     })
       .then(response => response.json())
       .then(data => {
-        this.setState({
-          chat: data
-        });
+        if (data.error) {
+          this.setState({ errorText: data.error });
+        } else {
+          this.setState({ chat: data });
+        }
       });
 
     socket.on('message', message => {
@@ -120,6 +124,7 @@ export default class Chatroom extends React.Component {
     return (
       <>
         <Header targetId={toUser} token={token} />
+        <Banner errorText={this.state.errorText} />
         <div className="w-9/10 h-[80vh] mx-auto sm:max-w-lg mb-8 overflow-auto">
           {this.displayMessage()}
         </div>

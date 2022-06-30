@@ -8,12 +8,12 @@ function errorMiddleware(err, req, res, next) {
     });
   } else if (err instanceof JsonWebTokenError) {
     res.status(401).json({
-      error: 'invalid access token'
+      error: 'Invalid access token. Please log out and sign in again.'
     });
   } else {
     console.error(err);
     res.status(500).json({
-      error: 'an unexpected error occurred'
+      error: 'An unexpected server error has occurred! Please try again.'
     });
   }
 }

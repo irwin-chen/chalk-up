@@ -46,7 +46,7 @@ export default class Header extends React.Component {
           <a href={`#profile?userId=${targetProfile.userId}`} className="text-white ml-4 text-xl" >{targetProfile.firstName}</a>
         </>
       );
-    } else if (route.path === 'sign-in') {
+    } else if (route.path === 'sign-in' || route.path === 'register') {
       return (
         <div className="w-9/10 mx-auto">
           <p className="text-white text-2xl">Chalk Up</p>

@@ -1,6 +1,7 @@
 import React from 'react';
 import UserCard from '../components/user-card';
 import Header from '../components/header';
+import Banner from '../components/banner';
 import AppContext from '../lib/app-context';
 
 export default class UserCardList extends React.Component {
@@ -8,7 +9,8 @@ export default class UserCardList extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      userList: null
+      userList: null,
+      errorText: ''
     };
   }
 
@@ -27,30 +29,36 @@ export default class UserCardList extends React.Component {
       .then(response => response.json())
       .then(data => {
         this.context.toggleLoading();
-        const list = data;
-        this.setState({
-          userList: list
-        });
+        if (data.error) {
+          this.setState({ errorText: data.error });
+        } else {
+          const list = data;
+          this.setState({
+            userList: list
+          });
+        }
       });
   }
 
   userCardList() {
-    const userCardList = this.state.userList.map(entry => {
-      return (
-        <UserCard userProfile={entry} key={entry.userId} userId={entry.userId} />
-      );
-    });
-    return userCardList;
+    const { userList } = this.state;
+    if (userList) {
+      const userCardList = userList.map(entry => {
+        return (
+          <UserCard userProfile={entry} key={entry.userId} userId={entry.userId} />
+        );
+      });
+      return userCardList;
+    }
   }
 
   render() {
     const { user } = this.context;
-    const { userList } = this.state;
     if (!user) window.location.hash = '#sign-in';
-    if (!userList) return null;
     return (
       <>
         <Header />
+        <Banner errorText={this.state.errorText} />
         <div className="w-full md:max-w-3xl md:mx-auto flex flex-wrap justify-evenly">
           {this.userCardList()}
         </div>

@@ -64,9 +64,6 @@ app.post('/api/signin', (req, res, next) => {
 
 app.post('/api/register', uploadsMiddleware, (req, res, next) => {
   const { username, password, firstName, lastName, age, city, userDescription } = req.body;
-  if (!username || !password) {
-    throw new ClientError(400, 'Username and password required');
-  }
   argon2
     .hash(password)
     .then(hashed => {
