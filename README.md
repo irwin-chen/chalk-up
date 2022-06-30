@@ -20,7 +20,7 @@ Features:
 - User can log in to an account
 - User can create a new account
 - User can chat with other users in real time
-- User can view messages in chat
+- User can view messages in a chat
 - User can send a message to another user
 - User can view profiles of other users
 - User can view a list of other user profiles
@@ -37,10 +37,3 @@ Stretch Features:
 - User can edit messages
 - User can delete messages
 - User can block other users
-
-Getting Started:
--
-- Open up two separate browser instances, either two different browsers or the same browser, with one session in incognito
-- For one browser, log in as trial user 1
-- Log in as trial user 2 with the other browser
-- Use the two accounts to message other accounts in the app
