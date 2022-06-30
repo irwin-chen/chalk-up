@@ -32,6 +32,7 @@ export default class Register extends React.Component {
     this.imageUploaded = this.imageUploaded.bind(this);
     this.accountSubmit = this.accountSubmit.bind(this);
     this.onToggle = this.onToggle.bind(this);
+    this.preSeed = this.preSeed.bind(this);
   }
 
   handleChange(event) {
@@ -233,6 +234,17 @@ export default class Register extends React.Component {
     );
   }
 
+  preSeed(event) {
+    if (event.target.value === '1') {
+      this.setState({ username: 'tester', password: 'tester' }, () => {
+      });
+    }
+    if (event.target.value === '2') {
+      this.setState({ username: 'tester2', password: 'tester2' }, () => {
+      });
+    }
+  }
+
   componentWillUnmount() {
     URL.revokeObjectURL(this.state.preview);
   }
@@ -243,6 +255,10 @@ export default class Register extends React.Component {
         <Header />
         <Banner errorText={this.state.errorText} />
         {this.createAccount()}
+        <div className="w-[95%] max-w-md py-6 mt-8 mx-auto rounded-lg flex justify-between">
+          <button onClick={this.preSeed} className="border border-black rounded-md px-3 py-1 text-md text-white bg-black" value={1}>Trial User 1</button>
+          <button onClick={this.preSeed} className="border border-black rounded-md px-3 py-1 text-md text-white bg-black" value={2}>Trial User 2</button>
+        </div>
       </>
     );
   }

@@ -12,6 +12,11 @@ insert into "user" ("userDescription", "imageUrl", "age", "city", "firstName", "
             ('New to climbing, looking for an indoor climbing partner!', 'https://climberfinder.s3.us-east-1.amazonaws.com/1656362647814.jpeg', '29', 'Irvine', 'Jeremy', 'Fisher'),
             ('Looking for other people to climb with!', 'https://climberfinder.s3.us-east-1.amazonaws.com/1656363388444.jpg', '26', 'Irvine', 'Irwin', 'Chen');
 
+insert into "user" ("hashedPassword", "userName", "userDescription", "imageUrl", "age", "city", "firstName", "lastName")
+     values ('$argon2i$v=19$m=4096,t=3,p=1$aqHw3iBNO88qbdogYQwo0A$83gbF2+fWLdvr/ht198BxZGq4d6C6U/99Rn7kHu+0ps', 'tester', 'Looking for people to climb with !', 'https://climberfinder.s3.us-east-1.amazonaws.com/1656577108296.jpeg', '25', 'Culver City', 'Raymond', 'Chang'),
+            ('$argon2i$v=19$m=4096,t=3,p=1$tVz9RON2iamran/d6h/yYw$Sby1JpPKjXMXR8RbR5zKjdKOPxRGWqhLnzR7E4SzdKg', 'tester2', 'Looking for something new!', 'https://climberfinder.s3.us-east-1.amazonaws.com/1656577395773.jpg', '21', 'Mission Viejo', 'Olivia', 'Olivares');
+
+
 insert into "skillLevels" ("label")
      values ('beginner'),
             ('intermediate'),
@@ -26,4 +31,9 @@ insert into "userTags" ("userId", "tagId")
             ('3','5'),
             ('3','6'),
             ('4','2'),
-            ('4','4');
+            ('4','4'),
+            ('5','1'),
+            ('5','2'),
+            ('5','5'),
+            ('6','2'),
+            ('6','4');
