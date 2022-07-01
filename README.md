@@ -46,9 +46,6 @@ Requirements:
 Getting Started:
 -
 1. Clone the repository
-  ```shell
-  git clone https://github.com/irwin-chen/chalk-up
-  ```
 2. Install all dependencies using NPM
 ```shell
 npm -i
@@ -72,4 +69,7 @@ AWS_S3_BUCKET=
 AWS_S3_REGION=
 AWS_SECRET_ACCESS_KEY=
 ```
-7. Start the project up. The application can be viewed at http://localhost:3000
+7. Start the project up in dev mode. The application can be viewed at http://localhost:3000
+```shell
+npm run dev
+```
