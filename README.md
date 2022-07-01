@@ -37,3 +37,39 @@ Stretch Features:
 - User can edit messages
 - User can delete messages
 - User can block other users
+
+Requirements:
+-
+- Node.js version 18.2 or higher
+- NPM version 8.9 or higher
+
+Getting Started:
+-
+1. Clone the repository
+  ```shell
+  git clone https://github.com/irwin-chen/chalk-up
+  ```
+2. Install all dependencies using NPM
+```shell
+npm -i
+```
+3. Make a copy of the .env file
+```shell
+cp .env.example .env
+```
+4. Start up PostgreSQL
+```shell
+sudo service postgresql start
+```
+5. Create a new database named chalkUp. The server can be viewed at http://localhost:8081
+```shell
+createdb chalkUp
+```
+6. Create a new amazon s3 bucket at Amazon Web Services(AWS), copy the access key, region, bucket name, and secret access key into the env file.
+```
+AWS_ACCESS_KEY_ID=
+AWS_S3_BUCKET=
+AWS_S3_REGION=
+AWS_SECRET_ACCESS_KEY=
+```
+7. Start the project up. The application can be viewed at http://localhost:3000
