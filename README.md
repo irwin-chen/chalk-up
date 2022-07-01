@@ -42,13 +42,14 @@ Requirements:
 -
 - Node.js version 18.2 or higher
 - NPM version 8.9 or higher
+- PostgreSQL version 14 or higher
 
 Getting Started:
 -
 1. Clone the repository
 2. Install all dependencies using NPM
 ```shell
-npm -i
+npm i
 ```
 3. Make a copy of the .env file
 ```shell
@@ -58,7 +59,7 @@ cp .env.example .env
 ```shell
 sudo service postgresql start
 ```
-5. Create a new database named chalkUp. The server can be viewed at http://localhost:8081
+5. Create a new database named chalkUp.
 ```shell
 createdb chalkUp
 ```
